@@ -30,7 +30,7 @@ namespace MHWWeaponUsage
         // Code copied from this repository: git@github.com:Nexusphobiker/MHWSaveEditor.git
 
         public const string GameId = "582010";
-        public const string GameSaveDataFilename = "SAVEDATA1000_2018-10-21";
+        public const string GameSaveDataFilename = "SAVEDATA1000";
         public static readonly string SteamPath;
 
         static Utils()
