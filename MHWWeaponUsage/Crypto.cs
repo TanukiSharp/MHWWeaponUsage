@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MHWWeaponUsage
@@ -29,7 +30,12 @@ namespace MHWWeaponUsage
                 key_72[i / 4] = BitConverter.ToUInt32(key_72_bytes, i);
         }
 
-        public void Decrypt(Stream inputStream, Stream outputStream)
+        public Task DecryptAsync(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() => Decrypt(inputStream, outputStream, cancellationToken));
+        }
+
+        private void Decrypt(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
         {
             if (inputStream == null)
                 throw new ArgumentNullException(nameof(inputStream));
@@ -48,7 +54,7 @@ namespace MHWWeaponUsage
                     long position = 0;
                     long length = reader.BaseStream.Length;
 
-                    while (position < length)
+                    while (position < length && cancellationToken.IsCancellationRequested == false)
                     {
                         ulong result = DecryptBlock(reader.ReadUInt32(), reader.ReadUInt32());
                         writer.Write(result);

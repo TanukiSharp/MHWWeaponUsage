@@ -8,12 +8,12 @@ using Microsoft.Win32;
 
 namespace MHWWeaponUsage
 {
-    public struct GameSaveInfo
+    public struct SaveDataInfo
     {
         public string UserId { get; }
         public string SaveDataFullFilename { get; }
 
-        public GameSaveInfo(string userId, string saveDataFullFilename)
+        public SaveDataInfo(string userId, string saveDataFullFilename)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId));
@@ -22,6 +22,28 @@ namespace MHWWeaponUsage
 
             UserId = userId;
             SaveDataFullFilename = saveDataFullFilename;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SaveDataInfo data)
+                return data.UserId == UserId && data.SaveDataFullFilename == SaveDataFullFilename;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return $"{UserId};{SaveDataFullFilename}".GetHashCode();
+        }
+
+        public static bool operator ==(SaveDataInfo left, SaveDataInfo right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(SaveDataInfo left, SaveDataInfo right)
+        {
+            return !(left == right);
         }
     }
 
@@ -38,7 +60,7 @@ namespace MHWWeaponUsage
             SteamPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null);
         }
 
-        public static IEnumerable<GameSaveInfo> EnumerateGameSaveDataInfo()
+        public static IEnumerable<SaveDataInfo> EnumerateSaveDataInfo()
         {
             if (SteamPath == null)
                 yield break;
@@ -56,7 +78,7 @@ namespace MHWWeaponUsage
                         if (File.Exists(saveDataFullFilename))
                         {
                             string userId = Path.GetFileName(userDirectory);
-                            yield return new GameSaveInfo(userId, saveDataFullFilename);
+                            yield return new SaveDataInfo(userId, saveDataFullFilename);
                         }
                     }
                 }

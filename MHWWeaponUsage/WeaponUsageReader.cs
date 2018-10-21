@@ -35,9 +35,12 @@ namespace MHWWeaponUsage
 
         public const uint Section3Signature = 0xAD35B985;
 
-        public void Read()
+        public IEnumerable<SaveSlotInfo> Read()
         {
-            reader.BaseStream.Position = 64 + 8 * 3; // skip header (64) + skip 3 first sections (8 * 3)
+            reader.BaseStream.Position =
+                64 + // header
+                8 * 3 // 3 first sectionIndex
+            ;
 
             long section3Offset = reader.ReadInt64();
 
@@ -46,102 +49,132 @@ namespace MHWWeaponUsage
 
             reader.BaseStream.Position = section3Offset;
 
+            // Here is the section 3
+
             uint section3Signature = reader.ReadUInt32();
             if (section3Signature != Section3Signature)
                 throw new FormatException($"Invalid section 3 signature, expected {Section3Signature:X8} but read {section3Signature:X8}");
 
-            Skip(4); // skip section.unknown (4)
+            Skip(
+                4 + // unknown
+                8 + // sectionSize
+                4 // sectionData_3.unknown
+            );
 
-            long sectionSize = reader.ReadInt64();
+            for (int i = 0; i < 3; i++)
+            {
+                SaveSlotInfo saveSlotInfo = ReadSaveSlot();
+                yield return saveSlotInfo;
+            }
+        }
 
-            Skip(92 + 120 + 44); // skip to hunterAppearance (92) + H_APPEARANCE (120) + P_APPEARANCE (44)
+        private const long WeaponUsageStructureSize = 14 * 2;
+        private const long HunterEquipmentStructureSize = 18 * 4;
+        private const long PalicoEquipmentStructureSize = 8 * 4;
+        private const long PalicoStructureSize = 119 + PalicoEquipmentStructureSize;
+        private const long ArenaRecordStructureSize = 60;
+        private const long ArenaStatsStructSize = 2 + ArenaRecordStructureSize * 5;
+        private const long Creatures8StructSize = 64;
+        private const long Creatures16StructSize = 64 * 2;
+        private const long GuildCardStructureSize =
+            1020 +
+            HunterEquipmentStructureSize +
+            PalicoStructureSize +
+            3 * WeaponUsageStructureSize +
+            10 * ArenaStatsStructSize +
+            4 * Creatures16StructSize +
+            Creatures8StructSize;
+
+        private const long ItemLoadoutStructureSize = 1128;
+        private const long ItemLoadoutsStructureSize = ItemLoadoutStructureSize * 56 + 56;
+        private const long ItemPouchStructureSize = 24 * 8 + 16 * 8 + 256 + 4 * 8;
+        private const long ItemBoxStructureSize = 8 * 200 + 8 * 200 + 8 * 800 + 8 * 200;
+        private const long EquipLoadoutStructureSize = 544;
+        private const long EquipLoadoutsStructureSize = EquipLoadoutStructureSize * 112;
+        private const long DlcTypeSize = 2;
+
+        private SaveSlotInfo ReadSaveSlot()
+        {
+            byte[] hunterNameBytes = reader.ReadBytes(64);
+            string hunterName = Encoding.UTF8.GetString(hunterNameBytes);
+
+            uint hunterRank = reader.ReadUInt32();
+
+            Skip(
+                4 + // zeni
+                4 + // researchPoints
+                4 + // hunterXP
+                4 + // playTime_s
+                4 + // unknown
+                120 + // H_APPEARANCE
+                44 // P_APPEARANCE
+            );
 
             // Here is struct GUILDCARD
 
-            ulong steamId = reader.ReadUInt64();
+            long startOffset = reader.BaseStream.Position;
 
-            reader.BaseStream.Seek(159 + 120 + 44 + 18 * 4 + 92 + 151 + 63, SeekOrigin.Current); // begining of GUILDCARD struct (159) + H_APPEARANCE (120) + P_APPEARANCE (44) + hunterEquipment (18 * 4) + unknown (92) + struct palico (151) + remaining of the struct GUILDCARD until weapon usage (63)
+            Skip(
+                167 + // begining of GUILDCARD struct
+                120 + // hunterAppearance (H_APPEARANCE)
+                44 + // palicoAppearance (P_APPEARANCE)
+                18 * 4 + // hunterEquipment
+                92 + // unknown
+                151 + // struct palico
+                63 // remaining of the struct GUILDCARD until weapon usage
+            );
 
-            //reader.BaseStream.Seek(9, SeekOrigin.Current);
-            //uint hunterRank = reader.ReadUInt32();
-            //reader.BaseStream.Seek(12, SeekOrigin.Current);
+            var lowRankWeaponUsage = WeaponUsage.Read(reader);
+            var highRankWeaponUsage = WeaponUsage.Read(reader);
+            var investigationsWeaponUsage = WeaponUsage.Read(reader);
 
-            //byte[] hunterName = reader.ReadBytes(64);
-            //string hunterNameStr = Encoding.ASCII.GetString(hunterName);
+            // Skip the remaining of the GUILDCARD structure
+            Skip(
+                1 + // poseID
+                1 + // expressionID
+                1 + // backgroundID
+                1 + // stickerID
+                256 + // greeting
+                256 + // title
+                2 + // titleFirst
+                2 + // titleMiddle
+                2 + // titleLast
+                4 + // positionX
+                4 + // positionY
+                4 + // zoom
+                10 * ArenaStatsStructSize + // arenaRecords
+                4 *  Creatures16StructSize + // creatureStats
+                Creatures8StructSize // researchLevel
+            );
 
-            //byte[] primaryGroup = reader.ReadBytes(54);
-            //string primaryGroupStr = Encoding.ASCII.GetString(primaryGroup);
+            long guildCardStructureLength = reader.BaseStream.Position - startOffset;
 
-            //Skip(16); // unknown
-            //Skip(120); // H_APPEARANCE
-            //Skip(44); // P_APPEARANCE
-            //Skip(18 * 4); // hunterEquipment
-            //Skip(92); // blob 0x5C
+            // Skip the remaining of the saveSlot structure
+            Skip(
+                GuildCardStructureSize * 100 + // sharedGC
+                0x019e36 + // unknown
+                ItemLoadoutsStructureSize + // itemLoadouts
+                8 + //  unknown
+                ItemPouchStructureSize + // itemPouch
+                ItemBoxStructureSize + // itemBox
+                0x034E3C + // unknown
+                42 * 250 + // investigations
+                0x0FB9 + // unknown
+                EquipLoadoutsStructureSize + // equipLoadout
+                0x6521 + // unknown
+                DlcTypeSize * 256 + // DLCClaimed
+                0x2A5D // unknown
+            );
 
-            //byte[] palicoName = reader.ReadBytes(64);
-            //string palicoNameStr = Encoding.UTF8.GetString(palicoName);
+            guildCardStructureLength = reader.BaseStream.Position - startOffset;
 
-            ////Skip(20 * 4 + 1);
-            ////byte[] palicoGadgets = reader.ReadBytes(6);
-
-            //uint palicoRank_Minus_1 = reader.ReadUInt32();
-            //uint palicoHealth = reader.ReadUInt32();
-            //uint palicoAttM = reader.ReadUInt32();
-            //uint palicoAttR = reader.ReadUInt32();
-            //uint palicoAffinity = reader.ReadUInt32();
-            //uint palicoDef = reader.ReadUInt32();
-            //int palicoVsFire = reader.ReadInt32();
-            //int palicoVsWater = reader.ReadInt32();
-            //int palicoVsThunder = reader.ReadInt32();
-            //int palicoVsIce = reader.ReadInt32();
-            //int palicoVsDragon = reader.ReadInt32();
-            //byte unknown = reader.ReadByte();
-
-            ////struct palicoEquipment
-            ////{
-            //uint palicoWeaponType = reader.ReadUInt32();
-            //uint palicoWeaponID = reader.ReadUInt32();
-            //uint palicoHeadArmorType = reader.ReadUInt32();
-            //uint palicoHeadArmorID = reader.ReadUInt32();
-            //uint palicoBodyArmorType = reader.ReadUInt32();
-            //uint palicoBodyArmorID = reader.ReadUInt32();
-            //uint palicoGadgetType = reader.ReadUInt32();
-            //uint palicoGadgetID = reader.ReadUInt32();
-            ////};
-            //byte[] unknown_ = reader.ReadBytes(4);
-            //byte palicoG1 = reader.ReadByte();
-            //byte palicoG2 = reader.ReadByte();
-            //byte palicoG3 = reader.ReadByte();
-            //byte palicoG4 = reader.ReadByte();
-            //byte palicoG5 = reader.ReadByte();
-            //byte palicoG6 = reader.ReadByte();
-
-
-            //uint unity = reader.ReadUInt32();
-            //byte[] unknown_0x10_ = reader.ReadBytes(16);
-            //ushort questsLR = reader.ReadUInt16();
-            //ushort questsHR = reader.ReadUInt16();
-            //ushort questsInvest = reader.ReadUInt16();
-            //ushort questsArena = reader.ReadUInt16();
-            //uint[] tailRaiderUnity = new uint[]
-            //{
-            //    reader.ReadUInt32(),
-            //    reader.ReadUInt32(),
-            //    reader.ReadUInt32(),
-            //    reader.ReadUInt32(),
-            //    reader.ReadUInt32()
-            //};
-            //byte[] unknown_0x0F__ = reader.ReadBytes(15);
-
-
-
-
-
-            var lowRank = WeaponUsage.Read(reader);
-            var highRank = WeaponUsage.Read(reader);
-            var investigations = WeaponUsage.Read(reader);
-
-            WeaponUsage totalWeaponUsage = lowRank + highRank + investigations;
+            return new SaveSlotInfo(
+                hunterName,
+                hunterRank,
+                lowRankWeaponUsage,
+                highRankWeaponUsage,
+                investigationsWeaponUsage
+            );
         }
 
         private void Skip(long count)
@@ -150,22 +183,45 @@ namespace MHWWeaponUsage
         }
     }
 
-    public struct WeaponUsage
+    public class SaveSlotInfo
     {
-        public ushort GreatSword;
-        public ushort LongSword;
-        public ushort SwordAndShield;
-        public ushort DualBlades;
-        public ushort Hammer;
-        public ushort HuntingHorn;
-        public ushort Lance;
-        public ushort Gunlance;
-        public ushort SwitchAxe;
-        public ushort ChargeBlade;
-        public ushort InsectGlaive;
-        public ushort LightBowgun;
-        public ushort HeavyBowgun;
-        public ushort Bow;
+        public string Name { get; }
+        public uint Rank { get; }
+
+        public WeaponUsage LowRank { get; }
+        public WeaponUsage HighRank { get; }
+        public WeaponUsage Investigations { get; }
+
+        public SaveSlotInfo(
+            string name, uint rank,
+            WeaponUsage lowRank, WeaponUsage highRank, WeaponUsage investigations)
+        {
+            Name = name;
+            Rank = rank;
+            LowRank = lowRank;
+            HighRank = highRank;
+            Investigations = investigations;
+        }
+    }
+
+#pragma warning disable CA1815 // Override equals and operator equals on value types
+    public struct WeaponUsage
+#pragma warning restore CA1815 // Override equals and operator equals on value types
+    {
+        public ushort GreatSword { get; private set; }
+        public ushort LongSword { get; private set; }
+        public ushort SwordAndShield { get; private set; }
+        public ushort DualBlades { get; private set; }
+        public ushort Hammer { get; private set; }
+        public ushort HuntingHorn { get; private set; }
+        public ushort Lance { get; private set; }
+        public ushort Gunlance { get; private set; }
+        public ushort SwitchAxe { get; private set; }
+        public ushort ChargeBlade { get; private set; }
+        public ushort InsectGlaive { get; private set; }
+        public ushort LightBowgun { get; private set; }
+        public ushort HeavyBowgun { get; private set; }
+        public ushort Bow { get; private set; }
 
         public static WeaponUsage Read(BinaryReader reader)
         {
