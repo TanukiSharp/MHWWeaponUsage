@@ -60,71 +60,88 @@ namespace MHWWeaponUsage
 
             ulong steamId = reader.ReadUInt64();
 
-            //reader.BaseStream.Seek(159 + 120 + 44 + 18 * 4 + 92 + 151 + 63, SeekOrigin.Current); // begining of GUILDCARD struct (159) + H_APPEARANCE (120) + P_APPEARANCE (44) + hunterEquipment (18 * 4) + unknown (92) + struct palico (151) + remaining of the struct GUILDCARD until weapon usage (63)
+            reader.BaseStream.Seek(159 + 120 + 44 + 18 * 4 + 92 + 151 + 63, SeekOrigin.Current); // begining of GUILDCARD struct (159) + H_APPEARANCE (120) + P_APPEARANCE (44) + hunterEquipment (18 * 4) + unknown (92) + struct palico (151) + remaining of the struct GUILDCARD until weapon usage (63)
 
-            reader.BaseStream.Seek(9, SeekOrigin.Current);
-            uint hunterRank = reader.ReadUInt32();
-            reader.BaseStream.Seek(12, SeekOrigin.Current);
+            //reader.BaseStream.Seek(9, SeekOrigin.Current);
+            //uint hunterRank = reader.ReadUInt32();
+            //reader.BaseStream.Seek(12, SeekOrigin.Current);
 
-            byte[] hunterName = reader.ReadBytes(64);
-            string hunterNameStr = Encoding.ASCII.GetString(hunterName);
+            //byte[] hunterName = reader.ReadBytes(64);
+            //string hunterNameStr = Encoding.ASCII.GetString(hunterName);
 
-            byte[] primaryGroup = reader.ReadBytes(54);
-            string primaryGroupStr = Encoding.ASCII.GetString(primaryGroup);
+            //byte[] primaryGroup = reader.ReadBytes(54);
+            //string primaryGroupStr = Encoding.ASCII.GetString(primaryGroup);
 
-            Skip(16); // unknown
-            Skip(120); // H_APPEARANCE
-            Skip(44); // P_APPEARANCE
-            Skip(18 * 4); // hunterEquipment
-            Skip(92); // blob 0x5C
+            //Skip(16); // unknown
+            //Skip(120); // H_APPEARANCE
+            //Skip(44); // P_APPEARANCE
+            //Skip(18 * 4); // hunterEquipment
+            //Skip(92); // blob 0x5C
 
-            byte[] palicoName = reader.ReadBytes(64);
-            string palicoNameStr = Encoding.UTF8.GetString(palicoName);
+            //byte[] palicoName = reader.ReadBytes(64);
+            //string palicoNameStr = Encoding.UTF8.GetString(palicoName);
 
-            //Skip(20 * 4 + 1);
-            //byte[] palicoGadgets = reader.ReadBytes(6);
+            ////Skip(20 * 4 + 1);
+            ////byte[] palicoGadgets = reader.ReadBytes(6);
 
-            uint palicoRank_Minus_1 = reader.ReadUInt32();
-            uint palicoHealth = reader.ReadUInt32();
-            uint palicoAttM = reader.ReadUInt32();
-            uint palicoAttR = reader.ReadUInt32();
-            uint palicoAffinity = reader.ReadUInt32();
-            uint palicoDef = reader.ReadUInt32();
-            int palicoVsFire = reader.ReadInt32();
-            int palicoVsWater = reader.ReadInt32();
-            int palicoVsThunder = reader.ReadInt32();
-            int palicoVsIce = reader.ReadInt32();
-            int palicoVsDragon = reader.ReadInt32();
-            byte unknown = reader.ReadByte();
+            //uint palicoRank_Minus_1 = reader.ReadUInt32();
+            //uint palicoHealth = reader.ReadUInt32();
+            //uint palicoAttM = reader.ReadUInt32();
+            //uint palicoAttR = reader.ReadUInt32();
+            //uint palicoAffinity = reader.ReadUInt32();
+            //uint palicoDef = reader.ReadUInt32();
+            //int palicoVsFire = reader.ReadInt32();
+            //int palicoVsWater = reader.ReadInt32();
+            //int palicoVsThunder = reader.ReadInt32();
+            //int palicoVsIce = reader.ReadInt32();
+            //int palicoVsDragon = reader.ReadInt32();
+            //byte unknown = reader.ReadByte();
 
-            //struct palicoEquipment
+            ////struct palicoEquipment
+            ////{
+            //uint palicoWeaponType = reader.ReadUInt32();
+            //uint palicoWeaponID = reader.ReadUInt32();
+            //uint palicoHeadArmorType = reader.ReadUInt32();
+            //uint palicoHeadArmorID = reader.ReadUInt32();
+            //uint palicoBodyArmorType = reader.ReadUInt32();
+            //uint palicoBodyArmorID = reader.ReadUInt32();
+            //uint palicoGadgetType = reader.ReadUInt32();
+            //uint palicoGadgetID = reader.ReadUInt32();
+            ////};
+            //byte[] unknown_ = reader.ReadBytes(4);
+            //byte palicoG1 = reader.ReadByte();
+            //byte palicoG2 = reader.ReadByte();
+            //byte palicoG3 = reader.ReadByte();
+            //byte palicoG4 = reader.ReadByte();
+            //byte palicoG5 = reader.ReadByte();
+            //byte palicoG6 = reader.ReadByte();
+
+
+            //uint unity = reader.ReadUInt32();
+            //byte[] unknown_0x10_ = reader.ReadBytes(16);
+            //ushort questsLR = reader.ReadUInt16();
+            //ushort questsHR = reader.ReadUInt16();
+            //ushort questsInvest = reader.ReadUInt16();
+            //ushort questsArena = reader.ReadUInt16();
+            //uint[] tailRaiderUnity = new uint[]
             //{
-            uint palicoWeaponType = reader.ReadUInt32();
-            uint palicoWeaponID = reader.ReadUInt32();
-            uint palicoHeadArmorType = reader.ReadUInt32();
-            uint palicoHeadArmorID = reader.ReadUInt32();
-            uint palicoBodyArmorType = reader.ReadUInt32();
-            uint palicoBodyArmorID = reader.ReadUInt32();
-            uint palicoGadgetType = reader.ReadUInt32();
-            uint palicoGadgetID = reader.ReadUInt32();
+            //    reader.ReadUInt32(),
+            //    reader.ReadUInt32(),
+            //    reader.ReadUInt32(),
+            //    reader.ReadUInt32(),
+            //    reader.ReadUInt32()
             //};
-            byte[] unknown_ = reader.ReadBytes(4);
-            byte palicoG1 = reader.ReadByte();
-            byte palicoG2 = reader.ReadByte();
-            byte palicoG3 = reader.ReadByte();
-            byte palicoG4 = reader.ReadByte();
-            byte palicoG5 = reader.ReadByte();
-            byte palicoG6 = reader.ReadByte();
+            //byte[] unknown_0x0F__ = reader.ReadBytes(15);
 
 
 
 
 
-            //var lowRank = WeaponUsage.Read(reader);
-            //var highRank = WeaponUsage.Read(reader);
-            //var investigations = WeaponUsage.Read(reader);
+            var lowRank = WeaponUsage.Read(reader);
+            var highRank = WeaponUsage.Read(reader);
+            var investigations = WeaponUsage.Read(reader);
 
-            //WeaponUsage totalWeaponUsage = lowRank + highRank + investigations;
+            WeaponUsage totalWeaponUsage = lowRank + highRank + investigations;
         }
 
         private void Skip(long count)
