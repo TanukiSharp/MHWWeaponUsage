@@ -17,7 +17,6 @@ namespace MHWWeaponUsage.ViewModels
         public RootViewModel()
         {
             Accounts = new ReadOnlyObservableCollection<AccountViewModel>(accounts);
-            Reload();
         }
 
         public void Reload()

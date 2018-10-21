@@ -64,7 +64,8 @@ namespace MHWWeaponUsage
             for (int i = 0; i < 3; i++)
             {
                 SaveSlotInfo saveSlotInfo = ReadSaveSlot();
-                yield return saveSlotInfo;
+                if (saveSlotInfo != null)
+                    yield return saveSlotInfo;
             }
         }
 
@@ -96,23 +97,25 @@ namespace MHWWeaponUsage
         private SaveSlotInfo ReadSaveSlot()
         {
             byte[] hunterNameBytes = reader.ReadBytes(64);
-            string hunterName = Encoding.UTF8.GetString(hunterNameBytes);
+            string hunterName = Encoding.UTF8.GetString(hunterNameBytes).TrimEnd('\0');
 
             uint hunterRank = reader.ReadUInt32();
 
             Skip(
                 4 + // zeni
                 4 + // researchPoints
-                4 + // hunterXP
-                4 + // playTime_s
+                4 // hunterXP
+            );
+
+            uint playTime = reader.ReadUInt32();
+
+            Skip(
                 4 + // unknown
                 120 + // H_APPEARANCE
                 44 // P_APPEARANCE
             );
 
             // Here is struct GUILDCARD
-
-            long startOffset = reader.BaseStream.Position;
 
             Skip(
                 167 + // begining of GUILDCARD struct
@@ -147,8 +150,6 @@ namespace MHWWeaponUsage
                 Creatures8StructSize // researchLevel
             );
 
-            long guildCardStructureLength = reader.BaseStream.Position - startOffset;
-
             // Skip the remaining of the saveSlot structure
             Skip(
                 GuildCardStructureSize * 100 + // sharedGC
@@ -166,11 +167,13 @@ namespace MHWWeaponUsage
                 0x2A5D // unknown
             );
 
-            guildCardStructureLength = reader.BaseStream.Position - startOffset;
+            if (playTime == 0)
+                return null;
 
             return new SaveSlotInfo(
                 hunterName,
                 hunterRank,
+                playTime,
                 lowRankWeaponUsage,
                 highRankWeaponUsage,
                 investigationsWeaponUsage
@@ -187,17 +190,19 @@ namespace MHWWeaponUsage
     {
         public string Name { get; }
         public uint Rank { get; }
+        public uint Playtime { get; }
 
         public WeaponUsage LowRank { get; }
         public WeaponUsage HighRank { get; }
         public WeaponUsage Investigations { get; }
 
         public SaveSlotInfo(
-            string name, uint rank,
+            string name, uint rank, uint playtime,
             WeaponUsage lowRank, WeaponUsage highRank, WeaponUsage investigations)
         {
             Name = name;
             Rank = rank;
+            Playtime = playtime;
             LowRank = lowRank;
             HighRank = highRank;
             Investigations = investigations;

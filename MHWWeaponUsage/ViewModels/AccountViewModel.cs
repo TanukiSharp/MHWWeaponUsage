@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,17 +13,59 @@ namespace MHWWeaponUsage.ViewModels
     {
         public string UserId { get; }
 
+        private readonly ObservableCollection<SaveDataSlotViewModel> saveDataItems = new ObservableCollection<SaveDataSlotViewModel>();
+        public ReadOnlyObservableCollection<SaveDataSlotViewModel> SaveDataItems { get; }
+
         private readonly string saveDataFullFilename;
 
         public AccountViewModel(SaveDataInfo saveDataInfo)
         {
+            if (saveDataInfo.SaveDataFullFilename == null)
+                throw new ArgumentException($"Argument '{nameof(saveDataInfo)}' is invalid");
+
             UserId = saveDataInfo.UserId;
             saveDataFullFilename = saveDataInfo.SaveDataFullFilename;
 
-            LoadSaveData(CancellationToken.None).ForgetRethrowOnError();
+            SaveDataItems = new ReadOnlyObservableCollection<SaveDataSlotViewModel>(saveDataItems);
+
+            InitializeAsync().ForgetRethrowOnError();
+
+            Console.WriteLine("Lol");
         }
 
-        private async Task LoadSaveData(CancellationToken cancellationToken)
+        private async Task InitializeAsync()
+        {
+            await LoadSaveDataAsync(CancellationToken.None);
+
+            var fsw = new FileSystemWatcher(
+                Path.GetDirectoryName(saveDataFullFilename),
+                Path.GetFileName(saveDataFullFilename)
+            )
+            {
+                IncludeSubdirectories = false
+            };
+
+            fsw.Renamed += OnSaveDataChanged;
+
+            fsw.EnableRaisingEvents = true;
+        }
+
+        private CancellationTokenSource cancellationTokenSource;
+
+        private void OnSaveDataChanged(object sender, RenamedEventArgs e)
+        {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+            }
+
+            cancellationTokenSource = new CancellationTokenSource();
+
+            Dispatcher.Invoke(() => LoadSaveDataAsync(cancellationTokenSource.Token).ForgetRethrowOnError());
+        }
+
+        private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
         {
             var crypto = new Crypto();
 
@@ -30,19 +73,24 @@ namespace MHWWeaponUsage.ViewModels
             {
                 var ms = new MemoryStream();
 
+                int thread = Thread.CurrentThread.ManagedThreadId;
+
                 await crypto.DecryptAsync(inputStream, ms, cancellationToken);
+
+                thread = Thread.CurrentThread.ManagedThreadId;
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
                 var weaponUsageReader = new WeaponUsageReader(ms);
 
-                string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
-                File.WriteAllBytes(targetFilename, ms.ToArray());
+                //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
+                //File.WriteAllBytes(targetFilename, ms.ToArray());
+
+                saveDataItems.Clear();
 
                 foreach (SaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
-                {
-                }
+                    saveDataItems.Add(new SaveDataSlotViewModel(saveSlotInfo));
             }
         }
     }
