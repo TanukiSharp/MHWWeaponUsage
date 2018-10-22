@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MHWWeaponUsage</RootNamespace>
     <AssemblyName>MHWWeaponUsage</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,12 +56,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ColorUtils.cs" />
+    <Compile Include="ScalableVectorGraphics\Loader.cs" />
+    <Compile Include="ScalableVectorGraphics\RasterizedImageContainer.cs" />
+    <Compile Include="ScalableVectorGraphics\Rasterizer.cs" />
     <Compile Include="TaskExtensions.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ValueConverters\EnumToImageSourceValueConverter.cs" />
+    <Compile Include="ValueConverters\RatioToBrushValueConverter.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\RootViewModel.cs" />
     <Compile Include="ViewModels\SaveDataSlotViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\WeaponUsageViewModel.cs" />
     <Compile Include="WeaponUsageReader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -102,6 +110,22 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Weapons\Bow.svg" />
+    <Resource Include="Icons\Weapons\ChargeBlade.svg" />
+    <Resource Include="Icons\Weapons\DualBlades.svg" />
+    <Resource Include="Icons\Weapons\GreatSword.svg" />
+    <Resource Include="Icons\Weapons\Gunlance.svg" />
+    <Resource Include="Icons\Weapons\Hammer.svg" />
+    <Resource Include="Icons\Weapons\HeavyBowgun.svg" />
+    <Resource Include="Icons\Weapons\HuntingHorn.svg" />
+    <Resource Include="Icons\Weapons\InsectGlaive.svg" />
+    <Resource Include="Icons\Weapons\Lance.svg" />
+    <Resource Include="Icons\Weapons\LightBowgun.svg" />
+    <Resource Include="Icons\Weapons\LongSword.svg" />
+    <Resource Include="Icons\Weapons\SwitchAxe.svg" />
+    <Resource Include="Icons\Weapons\SwordAndShield.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

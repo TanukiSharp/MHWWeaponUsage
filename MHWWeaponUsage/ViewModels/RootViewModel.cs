@@ -9,10 +9,63 @@ using System.Threading.Tasks;
 
 namespace MHWWeaponUsage.ViewModels
 {
+    public enum Sorting
+    {
+        Tree,
+        UsageAscending,
+        UsageDescending
+    }
+
+    public enum ViewType
+    {
+        LowRank,
+        HighRank,
+        Investigations,
+        Total
+    }
+
     public class RootViewModel : ViewModelBase
     {
         private readonly ObservableCollection<AccountViewModel> accounts = new ObservableCollection<AccountViewModel>();
         public ReadOnlyObservableCollection<AccountViewModel> Accounts { get; }
+
+        public int SortingIndex
+        {
+            get { return (int)Sorting; }
+            set { Sorting = (Sorting)value; }
+        }
+
+        private Sorting sorting = Sorting.Tree;
+        public Sorting Sorting
+        {
+            get { return sorting; }
+            set
+            {
+                if (SetValue(ref sorting, value))
+                    SortingChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler SortingChanged;
+
+        public int ViewTypeIndex
+        {
+            get { return (int)ViewType; }
+            set { ViewType = (ViewType)value; }
+        }
+
+        private ViewType viewType = ViewType.Total;
+        public ViewType ViewType
+        {
+            get { return viewType; }
+            set
+            {
+                if (SetValue(ref viewType, value))
+                    ViewTypeChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler ViewTypeChanged;
 
         public RootViewModel()
         {
@@ -21,8 +74,13 @@ namespace MHWWeaponUsage.ViewModels
 
         public void Reload()
         {
+            foreach (AccountViewModel account in accounts)
+                account.Dispose();
+
+            accounts.Clear();
+
             foreach (SaveDataInfo saveDataInfo in Utils.EnumerateSaveDataInfo())
-                accounts.Add(new AccountViewModel(saveDataInfo));
+                accounts.Add(new AccountViewModel(this, saveDataInfo));
         }
     }
 }

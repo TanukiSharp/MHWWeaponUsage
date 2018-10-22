@@ -9,19 +9,24 @@ using System.Threading.Tasks;
 
 namespace MHWWeaponUsage.ViewModels
 {
-    public class AccountViewModel : ViewModelBase
+    public class AccountViewModel : ViewModelBase, IDisposable
     {
         public string UserId { get; }
 
         private readonly ObservableCollection<SaveDataSlotViewModel> saveDataItems = new ObservableCollection<SaveDataSlotViewModel>();
         public ReadOnlyObservableCollection<SaveDataSlotViewModel> SaveDataItems { get; }
 
+        private readonly RootViewModel rootViewModel;
         private readonly string saveDataFullFilename;
 
-        public AccountViewModel(SaveDataInfo saveDataInfo)
+        public AccountViewModel(RootViewModel rootViewModel, SaveDataInfo saveDataInfo)
         {
+            if (rootViewModel == null)
+                throw new ArgumentNullException(nameof(rootViewModel));
             if (saveDataInfo.SaveDataFullFilename == null)
                 throw new ArgumentException($"Argument '{nameof(saveDataInfo)}' is invalid");
+
+            this.rootViewModel = rootViewModel;
 
             UserId = saveDataInfo.UserId;
             saveDataFullFilename = saveDataInfo.SaveDataFullFilename;
@@ -29,8 +34,6 @@ namespace MHWWeaponUsage.ViewModels
             SaveDataItems = new ReadOnlyObservableCollection<SaveDataSlotViewModel>(saveDataItems);
 
             InitializeAsync().ForgetRethrowOnError();
-
-            Console.WriteLine("Lol");
         }
 
         private async Task InitializeAsync()
@@ -87,10 +90,26 @@ namespace MHWWeaponUsage.ViewModels
                 //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
                 //File.WriteAllBytes(targetFilename, ms.ToArray());
 
+                foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
+                    saveDataItem.Dispose();
+
                 saveDataItems.Clear();
 
                 foreach (SaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
-                    saveDataItems.Add(new SaveDataSlotViewModel(saveSlotInfo));
+                    saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
+                saveDataItem.Dispose();
+
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
             }
         }
     }

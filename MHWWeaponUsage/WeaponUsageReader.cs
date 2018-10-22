@@ -94,6 +94,10 @@ namespace MHWWeaponUsage
         private const long EquipLoadoutsStructureSize = EquipLoadoutStructureSize * 112;
         private const long DlcTypeSize = 2;
 
+        // Slot 0 Active @ 0x3F3D64
+        // Slot 1 Active @ 0x4E9E74
+        // Slot 2 Active @ 0x5DFF84
+
         private SaveSlotInfo ReadSaveSlot()
         {
             byte[] hunterNameBytes = reader.ReadBytes(64);
