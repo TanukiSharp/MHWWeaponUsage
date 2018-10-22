@@ -51,16 +51,18 @@ namespace MHWWeaponUsage
             {
                 using (var writer = new BinaryWriter(outputStream, Encoding.UTF8, true))
                 {
-                    long position = 0;
                     long length = reader.BaseStream.Length;
 
-                    while (position < length && cancellationToken.IsCancellationRequested == false)
-                    {
-                        ulong result = DecryptBlock(reader.ReadUInt32(), reader.ReadUInt32());
-                        writer.Write(result);
+                    uint[] input = new uint[length / 4];
+                    for (int i = 0; i < input.Length; i++)
+                        input[i] = reader.ReadUInt32();
 
-                        position += 8;
-                    }
+                    ulong[] output = new ulong[length / 8];
+                    var options = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+                    Parallel.For(0, output.Length, options, i => output[i] = DecryptBlock(input[i * 2], input[i * 2 + 1]));
+
+                    for (int i = 0; i < output.Length; i++)
+                        writer.Write(output[i]);
                 }
             }
         }
