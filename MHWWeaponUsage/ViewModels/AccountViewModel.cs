@@ -37,36 +37,19 @@ namespace MHWWeaponUsage.ViewModels
             InitializeAsync().ForgetRethrowOnError();
         }
 
+        private SaveDataFileMonitor saveDataFileMonitor;
+
         private async Task InitializeAsync()
         {
             await LoadSaveDataAsync(CancellationToken.None);
 
-            var fsw = new FileSystemWatcher(
-                Path.GetDirectoryName(saveDataFullFilename),
-                Path.GetFileName(saveDataFullFilename)
-            )
-            {
-                IncludeSubdirectories = false
-            };
-
-            fsw.Renamed += OnSaveDataChanged;
-
-            fsw.EnableRaisingEvents = true;
+            saveDataFileMonitor = new SaveDataFileMonitor(saveDataFullFilename, 0);
+            saveDataFileMonitor.SaveDataFileChanged += OnSaveDataFileChanged;
         }
 
-        private CancellationTokenSource cancellationTokenSource;
-
-        private void OnSaveDataChanged(object sender, RenamedEventArgs e)
+        private void OnSaveDataFileChanged(object sender, SaveDataChangedEventArgs e)
         {
-            if (cancellationTokenSource != null)
-            {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource.Dispose();
-            }
-
-            cancellationTokenSource = new CancellationTokenSource();
-
-            Dispatcher.Invoke(() => LoadSaveDataAsync(cancellationTokenSource.Token).ForgetRethrowOnError());
+            LoadSaveDataAsync(e.CancellationToken).ForgetRethrowOnError();
         }
 
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
@@ -101,11 +84,10 @@ namespace MHWWeaponUsage.ViewModels
             foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
                 saveDataItem.Dispose();
 
-            if (cancellationTokenSource != null)
+            if (saveDataFileMonitor != null)
             {
-                cancellationTokenSource.Cancel();
-                cancellationTokenSource.Dispose();
-                cancellationTokenSource = null;
+                saveDataFileMonitor.Dispose();
+                saveDataFileMonitor = null;
             }
         }
     }
