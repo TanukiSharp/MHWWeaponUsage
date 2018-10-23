@@ -70,34 +70,29 @@ namespace MHWWeaponUsage.ViewModels
 
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
         {
+            var ms = new MemoryStream();
             var crypto = new Crypto();
 
             using (Stream inputStream = File.OpenRead(saveDataFullFilename))
             {
-                var ms = new MemoryStream();
-
-                int thread = Thread.CurrentThread.ManagedThreadId;
-
                 await crypto.DecryptAsync(inputStream, ms, cancellationToken);
-
-                thread = Thread.CurrentThread.ManagedThreadId;
-
-                if (cancellationToken.IsCancellationRequested)
-                    return;
-
-                var weaponUsageReader = new WeaponUsageReader(ms);
-
-                //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
-                //File.WriteAllBytes(targetFilename, ms.ToArray());
-
-                foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
-                    saveDataItem.Dispose();
-
-                saveDataItems.Clear();
-
-                foreach (SaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
-                    saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
             }
+
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            var weaponUsageReader = new WeaponUsageReader(ms);
+
+            //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
+            //File.WriteAllBytes(targetFilename, ms.ToArray());
+
+            foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
+                saveDataItem.Dispose();
+
+            saveDataItems.Clear();
+
+            foreach (SaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
+                saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
         }
 
         public void Dispose()
