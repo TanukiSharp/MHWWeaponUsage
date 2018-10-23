@@ -78,7 +78,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Crypto.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -126,6 +125,12 @@
     <Resource Include="Icons\Weapons\LongSword.svg" />
     <Resource Include="Icons\Weapons\SwitchAxe.svg" />
     <Resource Include="Icons\Weapons\SwordAndShield.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MHWSaveUtils\MHWSaveUtils.csproj">
+      <Project>{71d33237-8234-4a78-b26c-537445736525}</Project>
+      <Name>MHWSaveUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

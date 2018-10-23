@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MHWWeaponUsage
+namespace MHWSaveUtils
 {
     // Copied from this repository: git@github.com:Nexusphobiker/MHWSaveDecrypter.git
     // Then optimzed
+    // Interestingly, the unsafe way is as fast as the managed way (was expecting much faster)
 
     public class Crypto
     {
@@ -33,6 +32,11 @@ namespace MHWWeaponUsage
         public Task DecryptAsync(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(() => Decrypt(inputStream, outputStream, cancellationToken));
+        }
+
+        public Task DecryptUnsafeAsync(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
+        {
+            return Task.Factory.StartNew(() => DecryptUnsafe(inputStream, outputStream, cancellationToken));
         }
 
         private void Decrypt(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
@@ -65,6 +69,46 @@ namespace MHWWeaponUsage
                         writer.Write(output[i]);
                 }
             }
+        }
+
+        private byte[] DecryptUnsafe(Stream inputStream, Stream outputStream, CancellationToken cancellationToken)
+        {
+            if (inputStream == null)
+                throw new ArgumentNullException(nameof(inputStream));
+            if (outputStream == null)
+                throw new ArgumentNullException(nameof(outputStream));
+
+            if (inputStream.CanRead == false)
+                throw new ArgumentException($"Argument '{nameof(inputStream)}' must be readable");
+            if (outputStream.CanWrite == false)
+                throw new ArgumentException($"Argument '{nameof(outputStream)}' must be writable");
+
+            byte[] buffer = new byte[inputStream.Length];
+            inputStream.Read(buffer, 0, buffer.Length);
+
+            unsafe
+            {
+                fixed (void* pointer = buffer)
+                {
+                    uint* inputPointer = (uint*)pointer;
+                    ulong* outputPointer = (ulong*)pointer;
+
+                    // both parallel and non-parallel run at the same speed
+
+                    // -=-=-=- bellow is the non-parallel way -=-=-=-
+                    int length = buffer.Length / 8;
+                    for (int i = 0; i < length; i++)
+                        outputPointer[i] = DecryptBlock(inputPointer[i * 2], inputPointer[i * 2 + 1]);
+
+                    // -=-=-=- bellow is the parallel way -=-=-=-
+                    //Parallel.For(0, buffer.Length / 8, i => outputPointer[i] = DecryptBlock(inputPointer[i * 2], inputPointer[i * 2 + 1]));
+                }
+            }
+
+            outputStream.Position = 0;
+            outputStream.Write(buffer, 0, buffer.Length);
+
+            return buffer;
         }
 
         private ulong DecryptBlock(uint data, uint nextData)

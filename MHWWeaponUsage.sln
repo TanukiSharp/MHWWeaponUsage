@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MHWWeaponUsage", "MHWWeaponUsage\MHWWeaponUsage.csproj", "{7AF3A884-6D67-4C20-BEA9-9187FC5621EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MHWSaveUtils", "MHWSaveUtils\MHWSaveUtils.csproj", "{71D33237-8234-4A78-B26C-537445736525}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7AF3A884-6D67-4C20-BEA9-9187FC5621EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AF3A884-6D67-4C20-BEA9-9187FC5621EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AF3A884-6D67-4C20-BEA9-9187FC5621EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D33237-8234-4A78-B26C-537445736525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D33237-8234-4A78-B26C-537445736525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D33237-8234-4A78-B26C-537445736525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D33237-8234-4A78-B26C-537445736525}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
