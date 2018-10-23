@@ -54,12 +54,7 @@ namespace MHWSaveUtils
         public const string GameId = "582010";
         public const string GameSaveDataFilename = "SAVEDATA1000";
 
-        public static string SteamPath;
-
-        static FileSystemUtils()
-        {
-            SteamPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null);
-        }
+        public static string SteamPath = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam", "SteamPath", null);
 
         public static IEnumerable<SaveDataInfo> EnumerateSaveDataInfo()
         {
@@ -99,7 +94,7 @@ namespace MHWSaveUtils
         }
     }
 
-    public class SaveDataFileMonitor : IDisposable
+    public sealed class SaveDataFileMonitor : IDisposable
     {
         private readonly int delay;
         private readonly SynchronizationContext synchronizationContext = SynchronizationContext.Current;
