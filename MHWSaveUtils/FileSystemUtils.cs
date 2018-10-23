@@ -47,7 +47,7 @@ namespace MHWSaveUtils
         }
     }
 
-    public class FileSystemUtils
+    public static class FileSystemUtils
     {
         // Code copied from this repository: git@github.com:Nexusphobiker/MHWSaveEditor.git
 
