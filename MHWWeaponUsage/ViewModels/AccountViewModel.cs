@@ -64,18 +64,20 @@ namespace MHWWeaponUsage.ViewModels
             if (cancellationToken.IsCancellationRequested)
                 return;
 
-            var weaponUsageReader = new WeaponUsageReader(ms);
+            using (var weaponUsageReader = new WeaponUsageReader(ms))
+            {
 
-            //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
-            //File.WriteAllBytes(targetFilename, ms.ToArray());
+                //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
+                //File.WriteAllBytes(targetFilename, ms.ToArray());
 
-            foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
-                saveDataItem.Dispose();
+                foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
+                    saveDataItem.Dispose();
 
-            saveDataItems.Clear();
+                saveDataItems.Clear();
 
-            foreach (WeaponUsageSaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
-                saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
+                foreach (WeaponUsageSaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
+                    saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
+            }
         }
 
         public void Dispose()
