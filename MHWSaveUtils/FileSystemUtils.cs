@@ -174,7 +174,7 @@ namespace MHWSaveUtils
 
             var evt = new SaveDataChangedEventArgs(SaveDataFullFilename, cancellationTokenSource.Token);
 
-            if (synchronizationContext == null)
+            if (synchronizationContext != null)
                 synchronizationContext.Send(_ => SaveDataFileChanged?.Invoke(this, evt), null);
             else
                 SaveDataFileChanged?.Invoke(this, evt);
