@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MHWSaveUtils
 {
-    public class Constants
+    public static class Constants
     {
         public const uint Section3Signature = 0xAD35B985;
 

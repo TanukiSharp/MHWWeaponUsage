@@ -88,19 +88,19 @@ namespace MHWSaveUtils
 
             Skip(
                 4 + // unknown
-                120 + // H_APPEARANCE
-                44 // P_APPEARANCE
+                Constants.HunterAppearanceStructureSize + // H_APPEARANCE
+                Constants.PalicoAppearanceStructureSize // P_APPEARANCE
             );
 
             // Here is struct GUILDCARD
 
             Skip(
                 167 + // begining of GUILDCARD struct
-                120 + // hunterAppearance (H_APPEARANCE)
-                44 + // palicoAppearance (P_APPEARANCE)
-                18 * 4 + // hunterEquipment
+                Constants.HunterAppearanceStructureSize + // hunterAppearance (H_APPEARANCE)
+                Constants.PalicoAppearanceStructureSize + // palicoAppearance (P_APPEARANCE)
+                Constants.HunterEquipmentStructureSize + // hunterEquipment
                 92 + // unknown
-                151 + // struct palico
+                Constants.PalicoStructureSize + // struct palico
                 63 // remaining of the struct GUILDCARD until weapon usage
             );
 
