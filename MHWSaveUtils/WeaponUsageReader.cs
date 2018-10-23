@@ -7,51 +7,16 @@ using System.Threading.Tasks;
 
 namespace MHWSaveUtils
 {
-    public class WeaponUsageReader : IDisposable
+    public class WeaponUsageReader : SaveDataReaderBase
     {
-        private readonly BinaryReader reader;
-        private readonly long saveDataLength;
-
         public WeaponUsageReader(Stream saveData)
+            : base(saveData)
         {
-            if (saveData == null)
-                throw new ArgumentNullException(nameof(saveData));
-
-            if (saveData.CanRead == false)
-                throw new ArgumentException($"Argument '{nameof(saveData)}' must be readable, but is not");
-            if (saveData.CanSeek == false)
-                throw new ArgumentException($"Argument '{nameof(saveData)}' must be seekable, but is not");
-
-            // This call is very costly, so better cache it
-            saveDataLength = saveData.Length;
-
-            reader = new BinaryReader(saveData, Encoding.ASCII, true);
-        }
-
-        public void Dispose()
-        {
-            reader.Dispose();
         }
 
         public IEnumerable<WeaponUsageSaveSlotInfo> Read()
         {
-            reader.BaseStream.Position =
-                64 + // header
-                8 * 3 // 3 first sectionIndex
-            ;
-
-            long section3Offset = reader.ReadInt64();
-
-            if (section3Offset < 0 || section3Offset >= saveDataLength)
-                throw new FormatException($"Invalid section 3 offset ({section3Offset})");
-
-            reader.BaseStream.Position = section3Offset;
-
-            // Here is the section 3
-
-            uint section3Signature = reader.ReadUInt32();
-            if (section3Signature != Constants.Section3Signature)
-                throw new FormatException($"Invalid section 3 signature, expected {Constants.Section3Signature:X8} but read {section3Signature:X8}");
+            GotoSection3PastSignature();
 
             Skip(
                 4 + // unknown
@@ -73,18 +38,7 @@ namespace MHWSaveUtils
 
         private WeaponUsageSaveSlotInfo ReadSaveSlot()
         {
-            byte[] hunterNameBytes = reader.ReadBytes(64);
-            string hunterName = Encoding.UTF8.GetString(hunterNameBytes).TrimEnd('\0');
-
-            uint hunterRank = reader.ReadUInt32();
-
-            Skip(
-                4 + // zeni
-                4 + // researchPoints
-                4 // hunterXP
-            );
-
-            uint playTime = reader.ReadUInt32();
+            BaseSaveSlotInfo baseSaveSlotInfo = ReaderUntilPlaytimeIncluded();
 
             Skip(
                 4 + // unknown
@@ -144,42 +98,29 @@ namespace MHWSaveUtils
                 0x2A5D // unknown
             );
 
-            if (playTime == 0)
+            if (baseSaveSlotInfo.Playtime == 0)
                 return null;
 
             return new WeaponUsageSaveSlotInfo(
-                hunterName,
-                hunterRank,
-                playTime,
+                baseSaveSlotInfo,
                 lowRankWeaponUsage,
                 highRankWeaponUsage,
                 investigationsWeaponUsage
             );
         }
-
-        private void Skip(long count)
-        {
-            reader.BaseStream.Seek(count, SeekOrigin.Current);
-        }
     }
 
-    public class WeaponUsageSaveSlotInfo
+    public class WeaponUsageSaveSlotInfo : BaseSaveSlotInfo
     {
-        public string Name { get; }
-        public uint Rank { get; }
-        public uint Playtime { get; }
-
         public WeaponUsage LowRank { get; }
         public WeaponUsage HighRank { get; }
         public WeaponUsage Investigations { get; }
 
         public WeaponUsageSaveSlotInfo(
-            string name, uint rank, uint playtime,
+            BaseSaveSlotInfo baseSaveSlotInfo,
             WeaponUsage lowRank, WeaponUsage highRank, WeaponUsage investigations)
+            : base(baseSaveSlotInfo)
         {
-            Name = name;
-            Rank = rank;
-            Playtime = playtime;
             LowRank = lowRank;
             HighRank = highRank;
             Investigations = investigations;
