@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MHWWeaponUsage
+namespace MHWSaveUtils
 {
     public class WeaponUsageReader : IDisposable
     {
@@ -33,9 +33,7 @@ namespace MHWWeaponUsage
             reader.Dispose();
         }
 
-        public const uint Section3Signature = 0xAD35B985;
-
-        public IEnumerable<SaveSlotInfo> Read()
+        public IEnumerable<WeaponUsageSaveSlotInfo> Read()
         {
             reader.BaseStream.Position =
                 64 + // header
@@ -52,8 +50,8 @@ namespace MHWWeaponUsage
             // Here is the section 3
 
             uint section3Signature = reader.ReadUInt32();
-            if (section3Signature != Section3Signature)
-                throw new FormatException($"Invalid section 3 signature, expected {Section3Signature:X8} but read {section3Signature:X8}");
+            if (section3Signature != Constants.Section3Signature)
+                throw new FormatException($"Invalid section 3 signature, expected {Constants.Section3Signature:X8} but read {section3Signature:X8}");
 
             Skip(
                 4 + // unknown
@@ -63,42 +61,17 @@ namespace MHWWeaponUsage
 
             for (int i = 0; i < 3; i++)
             {
-                SaveSlotInfo saveSlotInfo = ReadSaveSlot();
+                WeaponUsageSaveSlotInfo saveSlotInfo = ReadSaveSlot();
                 if (saveSlotInfo != null)
                     yield return saveSlotInfo;
             }
         }
 
-        private const long WeaponUsageStructureSize = 14 * 2;
-        private const long HunterEquipmentStructureSize = 18 * 4;
-        private const long PalicoEquipmentStructureSize = 8 * 4;
-        private const long PalicoStructureSize = 119 + PalicoEquipmentStructureSize;
-        private const long ArenaRecordStructureSize = 60;
-        private const long ArenaStatsStructSize = 2 + ArenaRecordStructureSize * 5;
-        private const long Creatures8StructSize = 64;
-        private const long Creatures16StructSize = 64 * 2;
-        private const long GuildCardStructureSize =
-            1020 +
-            HunterEquipmentStructureSize +
-            PalicoStructureSize +
-            3 * WeaponUsageStructureSize +
-            10 * ArenaStatsStructSize +
-            4 * Creatures16StructSize +
-            Creatures8StructSize;
-
-        private const long ItemLoadoutStructureSize = 1128;
-        private const long ItemLoadoutsStructureSize = ItemLoadoutStructureSize * 56 + 56;
-        private const long ItemPouchStructureSize = 24 * 8 + 16 * 8 + 256 + 4 * 8;
-        private const long ItemBoxStructureSize = 8 * 200 + 8 * 200 + 8 * 800 + 8 * 200;
-        private const long EquipLoadoutStructureSize = 544;
-        private const long EquipLoadoutsStructureSize = EquipLoadoutStructureSize * 112;
-        private const long DlcTypeSize = 2;
-
         // Slot 0 Active @ 0x3F3D64
         // Slot 1 Active @ 0x4E9E74
         // Slot 2 Active @ 0x5DFF84
 
-        private SaveSlotInfo ReadSaveSlot()
+        private WeaponUsageSaveSlotInfo ReadSaveSlot()
         {
             byte[] hunterNameBytes = reader.ReadBytes(64);
             string hunterName = Encoding.UTF8.GetString(hunterNameBytes).TrimEnd('\0');
@@ -149,32 +122,32 @@ namespace MHWWeaponUsage
                 4 + // positionX
                 4 + // positionY
                 4 + // zoom
-                10 * ArenaStatsStructSize + // arenaRecords
-                4 *  Creatures16StructSize + // creatureStats
-                Creatures8StructSize // researchLevel
+                10 * Constants.ArenaStatsStructSize + // arenaRecords
+                4 * Constants.Creatures16StructSize + // creatureStats
+                Constants.Creatures8StructSize // researchLevel
             );
 
             // Skip the remaining of the saveSlot structure
             Skip(
-                GuildCardStructureSize * 100 + // sharedGC
+                Constants.GuildCardStructureSize * 100 + // sharedGC
                 0x019e36 + // unknown
-                ItemLoadoutsStructureSize + // itemLoadouts
+                Constants.ItemLoadoutsStructureSize + // itemLoadouts
                 8 + //  unknown
-                ItemPouchStructureSize + // itemPouch
-                ItemBoxStructureSize + // itemBox
+                Constants.ItemPouchStructureSize + // itemPouch
+                Constants.ItemBoxStructureSize + // itemBox
                 0x034E3C + // unknown
                 42 * 250 + // investigations
                 0x0FB9 + // unknown
-                EquipLoadoutsStructureSize + // equipLoadout
+                Constants.EquipLoadoutsStructureSize + // equipLoadout
                 0x6521 + // unknown
-                DlcTypeSize * 256 + // DLCClaimed
+                Constants.DlcTypeSize * 256 + // DLCClaimed
                 0x2A5D // unknown
             );
 
             if (playTime == 0)
                 return null;
 
-            return new SaveSlotInfo(
+            return new WeaponUsageSaveSlotInfo(
                 hunterName,
                 hunterRank,
                 playTime,
@@ -190,7 +163,7 @@ namespace MHWWeaponUsage
         }
     }
 
-    public class SaveSlotInfo
+    public class WeaponUsageSaveSlotInfo
     {
         public string Name { get; }
         public uint Rank { get; }
@@ -200,7 +173,7 @@ namespace MHWWeaponUsage
         public WeaponUsage HighRank { get; }
         public WeaponUsage Investigations { get; }
 
-        public SaveSlotInfo(
+        public WeaponUsageSaveSlotInfo(
             string name, uint rank, uint playtime,
             WeaponUsage lowRank, WeaponUsage highRank, WeaponUsage investigations)
         {

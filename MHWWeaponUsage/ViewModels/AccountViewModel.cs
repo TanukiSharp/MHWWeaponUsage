@@ -92,7 +92,7 @@ namespace MHWWeaponUsage.ViewModels
 
             saveDataItems.Clear();
 
-            foreach (SaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
+            foreach (WeaponUsageSaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
                 saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
         }
 

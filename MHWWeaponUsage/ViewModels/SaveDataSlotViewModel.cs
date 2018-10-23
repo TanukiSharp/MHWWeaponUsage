@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MHWSaveUtils;
 
 namespace MHWWeaponUsage.ViewModels
 {
@@ -17,7 +18,7 @@ namespace MHWWeaponUsage.ViewModels
         public WeaponUsageViewModel Investigations { get; }
         public WeaponUsageViewModel Total { get; }
 
-        public SaveDataSlotViewModel(RootViewModel rootViewModel, SaveSlotInfo saveSlotInfo)
+        public SaveDataSlotViewModel(RootViewModel rootViewModel, WeaponUsageSaveSlotInfo saveSlotInfo)
         {
             Name = saveSlotInfo.Name;
             Rank = saveSlotInfo.Rank;

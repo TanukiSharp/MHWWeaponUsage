@@ -69,7 +69,6 @@
     <Compile Include="ViewModels\SaveDataSlotViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\WeaponUsageViewModel.cs" />
-    <Compile Include="WeaponUsageReader.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
