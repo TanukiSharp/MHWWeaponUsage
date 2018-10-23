@@ -10,7 +10,7 @@ using MHWSaveUtils;
 
 namespace MHWWeaponUsage.ViewModels
 {
-    public class AccountViewModel : ViewModelBase, IDisposable
+    public sealed class AccountViewModel : ViewModelBase, IDisposable
     {
         public string UserId { get; }
 

@@ -45,7 +45,7 @@ namespace MHWWeaponUsage.ViewModels
         }
     }
 
-    public class WeaponUsageViewModel : ViewModelBase, IDisposable
+    public sealed class WeaponUsageViewModel : ViewModelBase, IDisposable
     {
         private bool isVisible;
         public bool IsVisible

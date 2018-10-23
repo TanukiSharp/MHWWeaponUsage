@@ -7,7 +7,7 @@ using MHWSaveUtils;
 
 namespace MHWWeaponUsage.ViewModels
 {
-    public class SaveDataSlotViewModel : ViewModelBase, IDisposable
+    public sealed class SaveDataSlotViewModel : ViewModelBase, IDisposable
     {
         public string Name { get; }
         public uint Rank { get; }
