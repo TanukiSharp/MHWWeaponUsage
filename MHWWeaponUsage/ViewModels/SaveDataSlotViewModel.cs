@@ -23,10 +23,7 @@ namespace MHWWeaponUsage.ViewModels
             Name = saveSlotInfo.Name;
             Rank = saveSlotInfo.Rank;
 
-            uint playtimeSeconds = saveSlotInfo.Playtime % 60;
-            uint playtimeMinutes = saveSlotInfo.Playtime / 60 % 60;
-            uint playtimeHours = saveSlotInfo.Playtime / 3600;
-            Playtime = $"{playtimeHours:d02}:{playtimeMinutes:d02}:{playtimeSeconds:d02}";
+            Playtime = MiscUtils.PlaytimeToGameString(saveSlotInfo.Playtime);
 
             LowRank = new WeaponUsageViewModel(rootViewModel, ViewType.LowRank, saveSlotInfo.LowRank);
             HighRank = new WeaponUsageViewModel(rootViewModel, ViewType.HighRank, saveSlotInfo.HighRank);

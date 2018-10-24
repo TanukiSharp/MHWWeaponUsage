@@ -135,8 +135,8 @@
     <Resource Include="Icons\Weapons\SwordAndShield.svg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MHWSaveUtils\MHWSaveUtils.csproj">
-      <Project>{71d33237-8234-4a78-b26c-537445736525}</Project>
+    <ProjectReference Include="..\MHWSaveUtils\MHWSaveUtils\MHWSaveUtils.csproj">
+      <Project>{4efd12fd-ec19-488e-8081-baafa9aa313a}</Project>
       <Name>MHWSaveUtils</Name>
     </ProjectReference>
   </ItemGroup>

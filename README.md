@@ -14,14 +14,6 @@ The application supports multiple users, and the 3 save slots per account.
 
 The save data is automatically reloaded and the UI is seamlessly updated, so after each auto-save, the application will keep the display up to date.
 
-# Interesting research
-
-I've implemented an unsafe decryption method, but surprisingly it is as fast as the managed decryption method.
-
-I was expecting it to be much fast since it does in-place decryption without tons of unnecessary copies. Also, parallelizing the unsafe method does not make it faster either.
-
-Maybe the blowfish algorithm itself takes too much overhead for such optimizations to end up being insignificant.
-
 # Thanks
 
 v00d00y, Asterisk
