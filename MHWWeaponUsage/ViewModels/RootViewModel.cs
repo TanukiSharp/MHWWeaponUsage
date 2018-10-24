@@ -30,6 +30,13 @@ namespace MHWWeaponUsage.ViewModels
         private readonly ObservableCollection<AccountViewModel> accounts = new ObservableCollection<AccountViewModel>();
         public ReadOnlyObservableCollection<AccountViewModel> Accounts { get; }
 
+        private bool isMiniMode;
+        public bool IsMiniMode
+        {
+            get { return isMiniMode; }
+            set { SetValue(ref isMiniMode, value); }
+        }
+
         public int SortingIndex
         {
             get { return (int)Sorting; }
