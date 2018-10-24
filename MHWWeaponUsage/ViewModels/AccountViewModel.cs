@@ -66,10 +66,6 @@ namespace MHWWeaponUsage.ViewModels
 
             using (var weaponUsageReader = new WeaponUsageReader(ms))
             {
-
-                //string targetFilename = $"{saveDataFullFilename}.decrypted.bin";
-                //File.WriteAllBytes(targetFilename, ms.ToArray());
-
                 foreach (SaveDataSlotViewModel saveDataItem in saveDataItems)
                     saveDataItem.Dispose();
 
