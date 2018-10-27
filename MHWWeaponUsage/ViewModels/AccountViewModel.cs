@@ -33,13 +33,11 @@ namespace MHWWeaponUsage.ViewModels
             saveDataFullFilename = saveDataInfo.SaveDataFullFilename;
 
             SaveDataItems = new ReadOnlyObservableCollection<SaveDataSlotViewModel>(saveDataItems);
-
-            InitializeAsync().ForgetRethrowOnError();
         }
 
         private SaveDataFileMonitor saveDataFileMonitor;
 
-        private async Task InitializeAsync()
+        public async Task InitializeAsync()
         {
             await LoadSaveDataAsync(CancellationToken.None);
 
@@ -49,7 +47,7 @@ namespace MHWWeaponUsage.ViewModels
 
         private void OnSaveDataFileChanged(object sender, SaveDataChangedEventArgs e)
         {
-            LoadSaveDataAsync(e.CancellationToken).ForgetRethrowOnError();
+            LoadSaveDataAsync(e.CancellationToken).Forget();
         }
 
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)

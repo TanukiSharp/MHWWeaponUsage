@@ -18,8 +18,12 @@ namespace MHWWeaponUsage.ViewModels
         public WeaponUsageViewModel Investigations { get; }
         public WeaponUsageViewModel Total { get; }
 
+        public WeaponUsageSaveSlotInfo SaveSlotInfo { get; }
+
         public SaveDataSlotViewModel(RootViewModel rootViewModel, WeaponUsageSaveSlotInfo saveSlotInfo)
         {
+            SaveSlotInfo = saveSlotInfo;
+
             Name = saveSlotInfo.Name;
             Rank = saveSlotInfo.Rank;
 

@@ -6,7 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Controls;
 using MHWWeaponUsage.ViewModels;
+using MHWSaveUtils;
 
 namespace MHWWeaponUsage
 {
@@ -15,25 +18,56 @@ namespace MHWWeaponUsage
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly RootViewModel rootViewModel = new RootViewModel();
+        private readonly RootViewModel rootViewModel;
 
         public MainWindow()
         {
             InitializeComponent();
 
+            rootViewModel = new RootViewModel(OnBeginMiniMode);
+
             DataContext = rootViewModel;
 
-            rootViewModel.Reload();
+            rootViewModel.Reload().Forget();
         }
+
+        private Task<WeaponUsageSaveSlotInfo> OnBeginMiniMode()
+        {
+            var selectorWindow = new SaveSlotSelectorWindow(rootViewModel.SelectorViewModel);
+
+            if (selectorWindow.ShowDialog() != true)
+                return Task.FromResult<WeaponUsageSaveSlotInfo>(null);
+
+            return Task.FromResult(rootViewModel.SelectorViewModel.SelectedWeaponUsage);
+        }
+
+        #region Moving window
 
         private Point originMousePosition;
         private Point originWindowPosition;
+
+        private static T FindParentOfType<T>(Visual current) where T : FrameworkElement
+        {
+            if (current == null)
+                return null;
+
+            if (current is T typed)
+                return typed;
+
+            current = VisualTreeHelper.GetParent(current) as Visual;
+            if (current == null)
+                return null;
+
+            return FindParentOfType<T>(current);
+        }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             base.OnPreviewMouseLeftButtonDown(e);
 
-            if (rootViewModel.IsMiniMode == false)
+            if (FindParentOfType<ComboBox>(e.OriginalSource as Visual) != null ||
+                FindParentOfType<ComboBoxItem>(e.OriginalSource as Visual) != null ||
+                FindParentOfType<Button>(e.OriginalSource as Visual) != null)
                 return;
 
             originMousePosition = PointToScreen(e.GetPosition(this));
@@ -46,9 +80,6 @@ namespace MHWWeaponUsage
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             base.OnPreviewMouseMove(e);
-
-            if (rootViewModel.IsMiniMode == false)
-                return;
 
             if (IsMouseCaptured)
             {
@@ -63,10 +94,9 @@ namespace MHWWeaponUsage
         {
             base.OnPreviewMouseLeftButtonUp(e);
 
-            if (rootViewModel.IsMiniMode == false)
-                return;
-
             ReleaseMouseCapture();
         }
+
+        #endregion
     }
 }
