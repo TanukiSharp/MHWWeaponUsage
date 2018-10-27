@@ -39,6 +39,20 @@ namespace MHWWeaponUsage
 
         private Task<WeaponUsageSaveSlotInfo> OnBeginMiniMode()
         {
+            int saveSlotCount = rootViewModel.Accounts.Sum(x => x.SaveDataItems.Count);
+
+            if (saveSlotCount == 0)
+                return Task.FromResult<WeaponUsageSaveSlotInfo>(null);
+
+            if (saveSlotCount == 1)
+            {
+                foreach (AccountViewModel account in rootViewModel.Accounts)
+                {
+                    if (account.SaveDataItems.Count == 1)
+                        return Task.FromResult(account.SaveDataItems[0].SaveSlotInfo);
+                }
+            }
+
             var selectorWindow = new SaveSlotSelectorWindow(rootViewModel.SelectorViewModel);
 
             if (selectorWindow.ShowDialog() != true)
