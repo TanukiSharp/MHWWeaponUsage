@@ -105,19 +105,52 @@ namespace MHWWeaponUsage.ViewModels
 
             try
             {
-                WeaponUsageSaveSlotInfo result = await onBeginMiniMode();
-
-                if (result == null)
-                    return;
-
-                // TODO: Make use of result.
-
-                IsMiniMode = true;
+                if (IsMiniMode == false)
+                    await TurnMiniModeOn();
+                else
+                    await TurnMiniModeOff();
             }
             finally
             {
                 ((AnonymousCommand)MiniModeToggleCommand).IsEnabled = true;
             }
+        }
+
+        private async Task TurnMiniModeOn()
+        {
+            WeaponUsageSaveSlotInfo result = await onBeginMiniMode();
+
+            if (result == null)
+                return;
+
+            foreach (AccountViewModel account in Accounts)
+            {
+                if (account.UserId == result.SaveDataInfo.UserId)
+                {
+                    account.IsVisible = true;
+                    foreach (SaveDataSlotViewModel saveDataItem in account.SaveDataItems)
+                        saveDataItem.IsVisible = saveDataItem.SlotNumber == result.SlotNumber;
+                }
+                else
+                    account.IsVisible = false;
+            }
+
+
+            IsMiniMode = true;
+        }
+
+        private Task TurnMiniModeOff()
+        {
+            foreach (AccountViewModel account in Accounts)
+            {
+                foreach (SaveDataSlotViewModel saveDataItem in account.SaveDataItems)
+                    saveDataItem.IsVisible = true;
+                account.IsVisible = true;
+            }
+
+            IsMiniMode = false;
+
+            return Task.CompletedTask;
         }
 
         public async Task Reload()

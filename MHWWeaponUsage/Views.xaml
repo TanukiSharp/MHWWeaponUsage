@@ -7,6 +7,13 @@
     <cvt:RatioToBrushValueConverter x:Key="RatioToBrushValueConverter"/>
     <cvt:WeaponEnumToImageSourceValueConverter x:Key="WeaponEnumToImageSourceValueConverter"/>
 
+    <DataTemplate x:Key="WeaponUsageValueMiniView">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding WeaponType, Mode=OneTime, Converter={StaticResource WeaponEnumToImageSourceValueConverter}, ConverterParameter=16}" Width="16" Height="16" Margin="1" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Count, Mode=OneTime}" VerticalAlignment="Center" Margin="1 1 8 1" FontWeight="Bold" Foreground="{Binding Ratio, Mode=OneTime, Converter={StaticResource RatioToBrushValueConverter}}"/>
+        </StackPanel>
+    </DataTemplate>
+
     <DataTemplate x:Key="WeaponUsageValueView">
         <Grid VerticalAlignment="Stretch" Margin="0 0 8 0" Focusable="False">
             <Grid.ColumnDefinitions>
@@ -20,6 +27,21 @@
                 </TextBlock.LayoutTransform>
             </TextBlock>
         </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="WeaponUsageMiniView">
+        <ItemsControl x:Name="root" ItemsSource="{Binding Values}" ItemTemplate="{StaticResource WeaponUsageValueMiniView}" Focusable="False">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="14" Focusable="False"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 
     <DataTemplate x:Key="WeaponUsageView">
@@ -37,8 +59,19 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
+    <DataTemplate x:Key="SaveDataSlotMiniView" DataType="vm:SaveDataSlotViewModel">
+        <Border x:Name="root" Background="White" CornerRadius="2" Focusable="False">
+            <ContentControl Content="{Binding Total, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageMiniView}" Focusable="False"/>
+        </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
     <DataTemplate x:Key="SaveDataSlotView" DataType="vm:SaveDataSlotViewModel">
-        <Border BorderBrush="WhiteSmoke" Background="White" CornerRadius="2" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
+        <Border x:Name="root" BorderBrush="WhiteSmoke" Background="White" CornerRadius="2" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
             <StackPanel Focusable="False">
                 <StackPanel Orientation="Horizontal" Focusable="False">
                     <TextBlock Margin="1 1 8 1">
@@ -62,10 +95,24 @@
                 </Grid>
             </StackPanel>
         </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate x:Key="AccountMiniView" DataType="vm:AccountViewModel">
+        <ItemsControl x:Name="root" ItemsSource="{Binding SaveDataItems, Mode=OneTime}" ItemTemplate="{StaticResource SaveDataSlotMiniView}" Focusable="False"/>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 
     <DataTemplate x:Key="AccountView" DataType="vm:AccountViewModel">
-        <Border BorderBrush="LightGray" Background="WhiteSmoke" CornerRadius="3" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
+        <Border x:Name="root" BorderBrush="LightGray" Background="WhiteSmoke" CornerRadius="3" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
             <StackPanel Orientation="Horizontal" Focusable="False">
                 <TextBlock Foreground="Gray" Margin="1">
                     <TextBlock.LayoutTransform>
@@ -77,6 +124,11 @@
                 <ItemsControl ItemsSource="{Binding SaveDataItems, Mode=OneTime}" ItemTemplate="{StaticResource SaveDataSlotView}" Focusable="False"/>
             </StackPanel>
         </Border>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 
     <DataTemplate x:Key="RootView" DataType="vm:RootViewModel">
@@ -106,13 +158,17 @@
                 </Border>
                 <Button Content="X" DockPanel.Dock="Right" Command="{Binding CloseCommand, Mode=OneTime}" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="1" ToolTip="Shutdown the application"/>
             </DockPanel>
-            <Border Background="White" CornerRadius="0 3 3 3" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="0">
-                <ItemsControl ItemsSource="{Binding Accounts, Mode=OneTime}" ItemTemplate="{StaticResource AccountView}" Focusable="False"/>
+            <Border x:Name="border" Background="White" CornerRadius="0 3 3 3" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="0">
+                <ItemsControl x:Name="accounts" ItemsSource="{Binding Accounts, Mode=OneTime}" ItemTemplate="{StaticResource AccountView}" Focusable="False"/>
             </Border>
         </DockPanel>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsMiniMode}" Value="True">
                 <Setter TargetName="ctrls" Property="Visibility" Value="Collapsed"/>
+                <Setter TargetName="accounts" Property="ItemTemplate" Value="{StaticResource AccountMiniView}"/>
+                <Setter TargetName="border" Property="CornerRadius" Value="3"/>
+                <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                <Setter TargetName="border" Property="BorderBrush" Value="LightGray"/>
             </DataTrigger>
         </DataTemplate.Triggers>
     </DataTemplate>

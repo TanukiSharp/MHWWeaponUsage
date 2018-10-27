@@ -25,10 +25,16 @@ namespace MHWWeaponUsage
             InitializeComponent();
 
             rootViewModel = new RootViewModel(OnBeginMiniMode);
+            rootViewModel.MiniModeChanged += RootViewModel_MiniModeChanged;
 
             DataContext = rootViewModel;
 
             rootViewModel.Reload().Forget();
+        }
+
+        private void RootViewModel_MiniModeChanged(object sender, EventArgs e)
+        {
+            Topmost = rootViewModel.IsMiniMode;
         }
 
         private Task<WeaponUsageSaveSlotInfo> OnBeginMiniMode()
@@ -39,6 +45,14 @@ namespace MHWWeaponUsage
                 return Task.FromResult<WeaponUsageSaveSlotInfo>(null);
 
             return Task.FromResult(rootViewModel.SelectorViewModel.SelectedWeaponUsage);
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+
+            if (rootViewModel.IsMiniMode)
+                Topmost = true;
         }
 
         #region Moving window

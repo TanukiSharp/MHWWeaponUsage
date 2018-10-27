@@ -93,7 +93,10 @@ namespace MHWWeaponUsage.ViewModels
                         break;
                 }
 
-                return selectedSaveDataSlot?.WeaponUsage;
+                if (selectedSaveDataSlot == null)
+                    return null;
+
+                return selectedSaveDataSlot.WeaponUsage;
             }
         }
 

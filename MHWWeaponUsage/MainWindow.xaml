@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MHWWeaponUsage"
         mc:Ignorable="d"
-        Title="MHW Weapon Usage" Height="450" Width="800" AllowsTransparency="True" WindowStyle="None" SizeToContent="WidthAndHeight" Background="Transparent">
+        Title="MHW Weapon Usage" Height="450" Width="800" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" SizeToContent="WidthAndHeight" Background="Transparent">
     <ContentControl Content="{Binding Path=., Mode=OneTime}" ContentTemplate="{StaticResource RootView}" Focusable="False"/>
 </Window>

@@ -5,10 +5,10 @@
     <DataTemplate x:Key="SelectorSaveDataSlotView" DataType="vm:SelectorSaveDataSlotViewModel">
         <StackPanel Orientation="Horizontal">
             <TextBlock Margin="1 1 6 1" Text="{Binding SlotNumber, Mode=OneTime, StringFormat=\{0\}.}" VerticalAlignment="Center"/>
-            <Button x:Name="root" Command="{Binding SelectionCommand, Mode=OneTime}" Background="White">
+            <Button x:Name="root" Command="{Binding SelectionCommand, Mode=OneTime}" Background="WhiteSmoke" BorderBrush="LightGray" BorderThickness="1">
                 <Button.Template>
                     <ControlTemplate>
-                        <Border BorderBrush="WhiteSmoke" Background="{TemplateBinding Background}" CornerRadius="3" Margin="4" BorderThickness="2" Padding="8" VerticalAlignment="Center" TextBlock.FontSize="14" Focusable="False">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="3" Margin="4" BorderThickness="{TemplateBinding BorderThickness}" Padding="8" VerticalAlignment="Center" TextBlock.FontSize="14" Focusable="False">
                             <Grid Focusable="False">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
@@ -46,7 +46,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="SelectorAccountView" DataType="vm:SelectorAccountViewModel">
-        <Border BorderBrush="LightGray" Background="WhiteSmoke" CornerRadius="3" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
+        <Border BorderBrush="LightGray" Background="White" CornerRadius="3" Margin="2 2 2 8" BorderThickness="2" Padding="2" Focusable="False">
             <StackPanel Orientation="Vertical" Focusable="False">
                 <TextBlock Foreground="Gray" Margin="1">
                     <Run Text="User: "/>
@@ -58,7 +58,9 @@
     </DataTemplate>
 
     <DataTemplate x:Key="SaveSlotSelectorView" DataType="vm:SaveSlotSelectorViewModel">
-        <ItemsControl ItemsSource="{Binding Accounts}" ItemTemplate="{StaticResource SelectorAccountView}" Focusable="False"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" Padding="6">
+            <ItemsControl ItemsSource="{Binding Accounts}" ItemTemplate="{StaticResource SelectorAccountView}" Focusable="False"/>
+        </ScrollViewer>
     </DataTemplate>
 
 </ResourceDictionary>

@@ -17,6 +17,13 @@ namespace MHWWeaponUsage.ViewModels
         private readonly ObservableCollection<SaveDataSlotViewModel> saveDataItems = new ObservableCollection<SaveDataSlotViewModel>();
         public ReadOnlyObservableCollection<SaveDataSlotViewModel> SaveDataItems { get; }
 
+        private bool isVisible = true;
+        public bool IsVisible
+        {
+            get { return isVisible; }
+            set { SetValue(ref isVisible, value); }
+        }
+
         private readonly RootViewModel rootViewModel;
         private readonly string saveDataFullFilename;
 
@@ -70,7 +77,10 @@ namespace MHWWeaponUsage.ViewModels
                 saveDataItems.Clear();
 
                 foreach (WeaponUsageSaveSlotInfo saveSlotInfo in weaponUsageReader.Read())
+                {
+                    saveSlotInfo.SetSaveDataInfo(new SaveDataInfo(UserId, saveDataFullFilename));
                     saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
+                }
             }
         }
 

@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MHWWeaponUsage"
         mc:Ignorable="d"
-        Title="SaveSlotSelectorWindow" Width="600" Height="400" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Save slot selector" Width="600" Height="400" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Background="WhiteSmoke">
     <ContentControl Content="{Binding}" ContentTemplate="{StaticResource SaveSlotSelectorView}" Focusable="False"/>
 </Window>

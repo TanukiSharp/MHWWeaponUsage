@@ -9,9 +9,17 @@ namespace MHWWeaponUsage.ViewModels
 {
     public sealed class SaveDataSlotViewModel : ViewModelBase, IDisposable
     {
+        public int SlotNumber { get; }
         public string Name { get; }
         public uint Rank { get; }
         public string Playtime { get; }
+
+        private bool isVisible = true;
+        public bool IsVisible
+        {
+            get { return isVisible; }
+            set { SetValue(ref isVisible, value); }
+        }
 
         public WeaponUsageViewModel LowRank { get; }
         public WeaponUsageViewModel HighRank { get; }
@@ -24,9 +32,9 @@ namespace MHWWeaponUsage.ViewModels
         {
             SaveSlotInfo = saveSlotInfo;
 
+            SlotNumber = saveSlotInfo.SlotNumber;
             Name = saveSlotInfo.Name;
             Rank = saveSlotInfo.Rank;
-
             Playtime = MiscUtils.PlaytimeToGameString(saveSlotInfo.Playtime);
 
             LowRank = new WeaponUsageViewModel(rootViewModel, ViewType.LowRank, saveSlotInfo.LowRank);
