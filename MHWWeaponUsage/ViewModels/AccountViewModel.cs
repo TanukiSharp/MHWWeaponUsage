@@ -82,6 +82,8 @@ namespace MHWWeaponUsage.ViewModels
                     saveDataItems.Add(new SaveDataSlotViewModel(rootViewModel, saveSlotInfo));
                 }
             }
+
+            rootViewModel.ApplyMiniModeVisibility();
         }
 
         public void Dispose()

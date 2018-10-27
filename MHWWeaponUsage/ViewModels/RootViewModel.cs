@@ -87,6 +87,7 @@ namespace MHWWeaponUsage.ViewModels
 
         public SaveSlotSelectorViewModel SelectorViewModel { get; } = new SaveSlotSelectorViewModel();
 
+        private WeaponUsageSaveSlotInfo miniModeSelectiion;
         private readonly Func<Task<WeaponUsageSaveSlotInfo>> onBeginMiniMode;
 
         public RootViewModel(Func<Task<WeaponUsageSaveSlotInfo>> onBeginMiniMode)
@@ -118,29 +119,38 @@ namespace MHWWeaponUsage.ViewModels
 
         private async Task TurnMiniModeOn()
         {
-            WeaponUsageSaveSlotInfo result = await onBeginMiniMode();
+            miniModeSelectiion = await onBeginMiniMode();
 
-            if (result == null)
+            if (miniModeSelectiion == null)
                 return;
 
-            foreach (AccountViewModel account in Accounts)
-            {
-                if (account.UserId == result.SaveDataInfo.UserId)
-                {
-                    account.IsVisible = true;
-                    foreach (SaveDataSlotViewModel saveDataItem in account.SaveDataItems)
-                        saveDataItem.IsVisible = saveDataItem.SlotNumber == result.SlotNumber;
-                }
-                else
-                    account.IsVisible = false;
-            }
-
+            ApplyMiniModeVisibility();
 
             IsMiniMode = true;
         }
 
+        public void ApplyMiniModeVisibility()
+        {
+            if (miniModeSelectiion == null)
+                return;
+
+            foreach (AccountViewModel account in Accounts)
+            {
+                if (account.UserId == miniModeSelectiion.SaveDataInfo.UserId)
+                {
+                    account.IsVisible = true;
+                    foreach (SaveDataSlotViewModel saveDataItem in account.SaveDataItems)
+                        saveDataItem.IsVisible = saveDataItem.SlotNumber == miniModeSelectiion.SlotNumber;
+                }
+                else
+                    account.IsVisible = false;
+            }
+        }
+
         private Task TurnMiniModeOff()
         {
+            miniModeSelectiion = null;
+
             foreach (AccountViewModel account in Accounts)
             {
                 foreach (SaveDataSlotViewModel saveDataItem in account.SaveDataItems)
@@ -174,6 +184,9 @@ namespace MHWWeaponUsage.ViewModels
             SelectorViewModel.Clear();
             foreach (AccountViewModel account in accounts)
                 SelectorViewModel.AddSaveData(account.UserId, account.SaveDataItems.Select(x => x.SaveSlotInfo));
+
+            if (IsMiniMode)
+                ApplyMiniModeVisibility();
         }
     }
 }
