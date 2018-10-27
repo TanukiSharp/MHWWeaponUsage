@@ -52,9 +52,21 @@ namespace MHWWeaponUsage.ViewModels
             saveDataFileMonitor.SaveDataFileChanged += OnSaveDataFileChanged;
         }
 
-        private void OnSaveDataFileChanged(object sender, SaveDataChangedEventArgs e)
+        private async void OnSaveDataFileChanged(object sender, SaveDataChangedEventArgs e)
         {
-            LoadSaveDataAsync(e.CancellationToken).Forget();
+            while (true)
+            {
+                try
+                {
+                    await LoadSaveDataAsync(e.CancellationToken);
+                    break;
+                }
+                catch (IOException)
+                {
+                    // Retry in 500 ms.
+                    await Task.Delay(500);
+                }
+            }
         }
 
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
