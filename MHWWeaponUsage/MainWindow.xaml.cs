@@ -36,7 +36,7 @@ namespace MHWWeaponUsage
             if (rootViewModel.IsMiniMode == false)
                 return;
 
-            originMousePosition = PointToScreen(e.GetPosition(null));
+            originMousePosition = PointToScreen(e.GetPosition(this));
             originWindowPosition = new Point(Left, Top);
 
             // Very important to capture AFTER acquiring the position
@@ -52,7 +52,7 @@ namespace MHWWeaponUsage
 
             if (IsMouseCaptured)
             {
-                Point currentPosition = PointToScreen(e.GetPosition(null));
+                Point currentPosition = PointToScreen(e.GetPosition(this));
 
                 Left = originWindowPosition.X + (currentPosition.X - originMousePosition.X);
                 Top = originWindowPosition.Y + (currentPosition.Y - originMousePosition.Y);
