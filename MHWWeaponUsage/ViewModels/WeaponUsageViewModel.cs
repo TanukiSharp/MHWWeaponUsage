@@ -64,7 +64,7 @@ namespace MHWWeaponUsage.ViewModels
         private readonly RootViewModel rootViewModel;
         private readonly IEnumerable<WeaponUsageValueViewModel> viewModels;
         private readonly ViewType viewType;
-        
+
         private static readonly WeaponType[] weaponTypes = (WeaponType[])Enum.GetValues(typeof(WeaponType));
 
         public WeaponUsageViewModel(RootViewModel rootViewModel, ViewType viewType, WeaponUsage weaponUsage)

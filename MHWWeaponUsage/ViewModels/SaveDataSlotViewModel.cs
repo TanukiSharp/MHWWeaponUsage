@@ -24,7 +24,7 @@ namespace MHWWeaponUsage.ViewModels
         public WeaponUsageViewModel LowRank { get; }
         public WeaponUsageViewModel HighRank { get; }
         public WeaponUsageViewModel Investigations { get; }
-        public WeaponUsageViewModel Total { get; }
+        public WeaponUsageViewModel All { get; }
 
         public WeaponUsageSaveSlotInfo SaveSlotInfo { get; }
 
@@ -41,7 +41,7 @@ namespace MHWWeaponUsage.ViewModels
             HighRank = new WeaponUsageViewModel(rootViewModel, ViewType.HighRank, saveSlotInfo.HighRank);
             Investigations = new WeaponUsageViewModel(rootViewModel, ViewType.Investigations, saveSlotInfo.Investigations);
 
-            Total = new WeaponUsageViewModel(rootViewModel, ViewType.Total, saveSlotInfo.LowRank + saveSlotInfo.HighRank + saveSlotInfo.Investigations);
+            All = new WeaponUsageViewModel(rootViewModel, ViewType.All, saveSlotInfo.LowRank + saveSlotInfo.HighRank + saveSlotInfo.Investigations);
         }
 
         public void Dispose()
@@ -49,7 +49,7 @@ namespace MHWWeaponUsage.ViewModels
             LowRank.Dispose();
             HighRank.Dispose();
             Investigations.Dispose();
-            Total.Dispose();
+            All.Dispose();
         }
     }
 }

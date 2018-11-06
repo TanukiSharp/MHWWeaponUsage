@@ -61,7 +61,7 @@
 
     <DataTemplate x:Key="SaveDataSlotMiniView" DataType="vm:SaveDataSlotViewModel">
         <Border x:Name="root" Background="White" CornerRadius="2" Focusable="False">
-            <ContentControl Content="{Binding Total, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageMiniView}" Focusable="False"/>
+            <ContentControl Content="{Binding All, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageMiniView}" Focusable="False"/>
         </Border>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsVisible}" Value="False">
@@ -88,10 +88,10 @@
                     </TextBlock>
                 </StackPanel>
                 <Grid Margin="2">
+                    <ContentControl Content="{Binding All, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding LowRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding HighRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding Investigations, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
-                    <ContentControl Content="{Binding Total, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                 </Grid>
             </StackPanel>
         </Border>
@@ -149,10 +149,10 @@
                         </ComboBox>
                         <TextBlock Text="View: " VerticalAlignment="Center" Margin="2" FontWeight="Bold"/>
                         <ComboBox SelectedIndex="{Binding ViewTypeIndex}" VerticalAlignment="Center" Margin="2">
+                            <TextBlock Text="All"/>
                             <TextBlock Text="Low rank"/>
                             <TextBlock Text="High rank"/>
                             <TextBlock Text="Investigations"/>
-                            <TextBlock Text="Total"/>
                         </ComboBox>
                     </StackPanel>
                 </Border>

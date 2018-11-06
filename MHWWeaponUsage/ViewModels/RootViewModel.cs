@@ -20,10 +20,10 @@ namespace MHWWeaponUsage.ViewModels
 
     public enum ViewType
     {
+        All,
         LowRank,
         HighRank,
-        Investigations,
-        Total
+        Investigations
     }
 
     public class RootViewModel : ViewModelBase
@@ -72,7 +72,7 @@ namespace MHWWeaponUsage.ViewModels
             set { ViewType = (ViewType)value; }
         }
 
-        private ViewType viewType = ViewType.Total;
+        private ViewType viewType = ViewType.All;
         public ViewType ViewType
         {
             get { return viewType; }
