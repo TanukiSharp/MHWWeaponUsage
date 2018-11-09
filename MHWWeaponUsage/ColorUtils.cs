@@ -38,7 +38,7 @@ namespace MHWWeaponUsage
         {
             double divisor = max - min;
             if (Math.Abs(divisor) < 1e-6)
-                return 0.0;
+                return 1.0;
             return (value - min) / divisor;
         }
 
