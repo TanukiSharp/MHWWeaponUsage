@@ -144,8 +144,11 @@
                     <MenuItem Header="Toggle mini mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}"/>
                 </ContextMenu>
             </DockPanel.ContextMenu>
+            <Border x:Name="border" DockPanel.Dock="Bottom" Background="White" CornerRadius="0 3 3 3" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1" BorderBrush="LightGray">
+                <ItemsControl x:Name="accounts" ItemsSource="{Binding Accounts, Mode=OneTime}" ItemTemplate="{StaticResource AccountView}" Focusable="False"/>
+            </Border>
             <DockPanel x:Name="ctrls" DockPanel.Dock="Top" Focusable="False" HorizontalAlignment="Stretch">
-                <Border DockPanel.Dock="Left" HorizontalAlignment="Left" Background="White" CornerRadius="3 3 0 0" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="0">
+                <Border DockPanel.Dock="Left" HorizontalAlignment="Left" Background="White" CornerRadius="3 3 0 0" Padding="4" Margin="0 0 0 -1" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1 1 1 0" BorderBrush="LightGray">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Sorting: " VerticalAlignment="Center" Margin="2" FontWeight="Bold"/>
                         <ComboBox SelectedIndex="{Binding SortingIndex}" VerticalAlignment="Center" Margin="2">
@@ -164,9 +167,6 @@
                 </Border>
                 <Button Content="X" DockPanel.Dock="Right" Command="{Binding CloseCommand, Mode=OneTime}" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="1" ToolTip="Shutdown the application"/>
             </DockPanel>
-            <Border x:Name="border" Background="White" CornerRadius="0 3 3 3" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="0">
-                <ItemsControl x:Name="accounts" ItemsSource="{Binding Accounts, Mode=OneTime}" ItemTemplate="{StaticResource AccountView}" Focusable="False"/>
-            </Border>
         </DockPanel>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsMiniMode}" Value="True">
