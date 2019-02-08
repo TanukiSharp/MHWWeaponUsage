@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using MHWSaveUtils;
 
 namespace MHWWeaponUsage.ViewModels
@@ -23,6 +24,8 @@ namespace MHWWeaponUsage.ViewModels
             get { return isVisible; }
             set { SetValue(ref isVisible, value); }
         }
+
+        public ICommand MiniModeToggleCommand { get { return rootViewModel.MiniModeToggleCommand; } }
 
         private readonly RootViewModel rootViewModel;
         private readonly string saveDataFullFilename;

@@ -2,13 +2,18 @@
 
 DO NOT use this code, in part or in totality, to cheat, or produce code that would eventually lead to cheat.
 
+# Download
+
+Current version: <b><a href="https://tanukisharp.github.io/MHWWeaponUsage/download.html">0.1.0.0</a></b><br/>
+Last modification: 2019/02/08
+
 # Overview
 
 This application displays the current weapon usage, for Monster Hunter: World.
 
 The display is based on your save files (all of them) and updated immediately when save change is detected.
 
-For those like me who play with all weapons and want to always keep an eye on the weapon usage without always having to go to the guild card, this application is made for you.
+For those like me who play with all weapons (or many) and want to always keep an eye on the weapon usage without always having to go to the guild card, this application is made for you.
 
 Either you want to maintain the balance between weapons
 
@@ -26,7 +31,7 @@ If you have only one monitor (or if you have more than one but still don't like 
 
 # Mini-mode
 
-To enter mini-mode, simply right-click the application and click the `Toggle mini mode` context menu. Do the same to exit mini-mode.
+To enter mini-mode, simply click the `Mini mode` button. To exit mini mode, right-click on the application bar and click the `Back to regular mode` menu.
 
 When switching to mini-mode, the application prompts you for the save data slot to display. If you have only one, there is no prompt.
 
@@ -42,14 +47,14 @@ Color code shows the less used weapon in red, and the most used weapon in green,
 
 ## Sorting
 
-You can sort the weapon usage 3 different ways:
+You can sort the weapon usage in 3 different ways:
 - `Tree`: Weapons are in the order you know, Great sword, Long sword, Sword and shield, etc...
 - `Usage (ascending)`: Weapons are ordered from left to right, the less used to the most used
 - `Usage (descending)`: Weapons are ordered from left to right, the most used to the less used
 
 ## View
 
-The view selector let you choose if you want to see only `Low rank` weapon usage, `High rank`, `Investigations` or the total of all (`Total`). Just like in the game.
+The view selector lets you choose if you want to see only `Low rank` weapon usage, `High rank`, `Investigations` or the total of all (`Total`). Just like in the game.
 
 # Thanks
 

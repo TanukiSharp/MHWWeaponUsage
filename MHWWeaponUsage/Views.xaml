@@ -109,7 +109,13 @@
     </DataTemplate>
 
     <DataTemplate x:Key="AccountMiniView" DataType="vm:AccountViewModel">
-        <ItemsControl x:Name="root" ItemsSource="{Binding SaveDataItems, Mode=OneTime}" ItemTemplate="{StaticResource SaveDataSlotMiniView}" Focusable="False"/>
+        <ItemsControl x:Name="root" ItemsSource="{Binding SaveDataItems, Mode=OneTime}" ItemTemplate="{StaticResource SaveDataSlotMiniView}" Focusable="False">
+            <ItemsControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Back to regular mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}"/>
+                </ContextMenu>
+            </ItemsControl.ContextMenu>
+        </ItemsControl>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsVisible}" Value="False">
                 <Setter TargetName="root" Property="Visibility" Value="Collapsed"/>
@@ -139,16 +145,11 @@
 
     <DataTemplate x:Key="RootView" DataType="vm:RootViewModel">
         <DockPanel LastChildFill="True" Margin="4" Focusable="False" Background="Transparent">
-            <DockPanel.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Toggle mini mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}"/>
-                </ContextMenu>
-            </DockPanel.ContextMenu>
             <Border x:Name="border" DockPanel.Dock="Bottom" Background="White" CornerRadius="0 3 3 3" Padding="4" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1" BorderBrush="LightGray">
                 <ItemsControl x:Name="accounts" ItemsSource="{Binding Accounts, Mode=OneTime}" ItemTemplate="{StaticResource AccountView}" Focusable="False"/>
             </Border>
             <DockPanel x:Name="ctrls" DockPanel.Dock="Top" Focusable="False" HorizontalAlignment="Stretch">
-                <Border DockPanel.Dock="Left" HorizontalAlignment="Left" Background="White" CornerRadius="3 3 0 0" Padding="4" Margin="0 0 0 -1" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1 1 1 0" BorderBrush="LightGray">
+                <Border HorizontalAlignment="Left" Background="White" CornerRadius="3 3 0 0" Padding="4" Margin="0 0 0 -1" SnapsToDevicePixels="True" UseLayoutRounding="True" BorderThickness="1 1 1 0" BorderBrush="LightGray">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Sorting: " VerticalAlignment="Center" Margin="2" FontWeight="Bold"/>
                         <ComboBox SelectedIndex="{Binding SortingIndex}" VerticalAlignment="Center" Margin="2">
@@ -163,9 +164,10 @@
                             <TextBlock Text="High rank"/>
                             <TextBlock Text="Investigations"/>
                         </ComboBox>
+                        <Button Content="Mini mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}" Margin="6 2 2 2" Padding="4 0 4 0" ToolTip="Enter mini mode"/>
+                        <Button Content="X" Command="{Binding CloseCommand, Mode=OneTime}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" Margin="6 2 2 2" ToolTip="Shutdown the application"/>
                     </StackPanel>
                 </Border>
-                <Button Content="X" DockPanel.Dock="Right" Command="{Binding CloseCommand, Mode=OneTime}" Width="24" Height="24" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="1" ToolTip="Shutdown the application"/>
             </DockPanel>
         </DockPanel>
         <DataTemplate.Triggers>
