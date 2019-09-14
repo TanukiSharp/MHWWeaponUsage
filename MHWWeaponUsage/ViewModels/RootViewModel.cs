@@ -53,7 +53,7 @@ namespace MHWWeaponUsage.ViewModels
             set { Sorting = (Sorting)value; }
         }
 
-        private Sorting sorting = Sorting.Tree;
+        private Sorting sorting = Sorting.UsageAscending;
         public Sorting Sorting
         {
             get { return sorting; }
