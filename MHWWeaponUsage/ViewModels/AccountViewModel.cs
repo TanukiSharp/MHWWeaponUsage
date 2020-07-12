@@ -75,10 +75,16 @@ namespace MHWWeaponUsage.ViewModels
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
         {
             var ms = new MemoryStream();
+            var crypto = new Crypto();
 
             using (Stream inputStream = File.OpenRead(saveDataFullFilename))
             {
-                await Crypto.DecryptAsync(inputStream, ms, cancellationToken);
+                byte[] buffer = new byte[inputStream.Length];
+                await inputStream.ReadAsync(buffer, 0, buffer.Length);
+
+                await crypto.DecryptAsync(buffer);
+
+                await ms.WriteAsync(buffer, 0, buffer.Length);
             }
 
             if (cancellationToken.IsCancellationRequested)
