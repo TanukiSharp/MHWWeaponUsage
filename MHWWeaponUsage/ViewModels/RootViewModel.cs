@@ -24,7 +24,8 @@ namespace MHWWeaponUsage.ViewModels
         LowRank,
         HighRank,
         MasterRank,
-        Investigations
+        Investigations,
+        GuidingLands
     }
 
     public class RootViewModel : ViewModelBase

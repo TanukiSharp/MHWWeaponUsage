@@ -4,12 +4,12 @@ DO NOT use this code, in part or in totality, to cheat, or produce code that wou
 
 # Download
 
-Current version: <b><a href="https://tanukisharp.github.io/MHWWeaponUsage/download.html">0.1.0.0</a></b><br/>
-Last modification: 2019/02/08
+Current version: <b><a href="https://tanukisharp.github.io/MHWWeaponUsage/download.html">0.1.1.0</a></b><br/>
+Last modification: 2020/07/13
 
 # Overview
 
-This application displays the current weapon usage, for Monster Hunter: World.
+This application displays the current weapon usage, for Monster Hunter: World and Iceborne.
 
 The display is based on your save files (all of them) and updated immediately when save change is detected.
 
@@ -54,8 +54,8 @@ You can sort the weapon usage in 3 different ways:
 
 ## View
 
-The view selector lets you choose if you want to see only `Low rank` weapon usage, `High rank`, `Investigations` or the total of all (`Total`). Just like in the game.
+The view selector lets you choose if you want to see only `Low rank` weapon usage, `High rank`, `Master rank`, `Investigations`, `Guiding Lands` or the total of all (`All`). Just like in the game.
 
 # Thanks
 
-v00d00y, Asterisk
+v00d00y, Asterisk, Fusion

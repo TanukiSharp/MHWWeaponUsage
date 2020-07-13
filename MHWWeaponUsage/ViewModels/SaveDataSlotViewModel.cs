@@ -26,6 +26,7 @@ namespace MHWWeaponUsage.ViewModels
         public WeaponUsageViewModel HighRank { get; }
         public WeaponUsageViewModel MasterRank { get; }
         public WeaponUsageViewModel Investigations { get; }
+        public WeaponUsageViewModel GuidingLands { get; }
         public WeaponUsageViewModel All { get; }
 
         public WeaponUsageSaveSlotInfo SaveSlotInfo { get; }
@@ -44,12 +45,14 @@ namespace MHWWeaponUsage.ViewModels
             HighRank = new WeaponUsageViewModel(rootViewModel, ViewType.HighRank, saveSlotInfo.HighRank);
             MasterRank = new WeaponUsageViewModel(rootViewModel, ViewType.MasterRank, saveSlotInfo.MasterRank);
             Investigations = new WeaponUsageViewModel(rootViewModel, ViewType.Investigations, saveSlotInfo.Investigations);
+            GuidingLands = new WeaponUsageViewModel(rootViewModel, ViewType.GuidingLands, saveSlotInfo.GuidingLands);
 
             WeaponUsage all =
                 saveSlotInfo.LowRank +
                 saveSlotInfo.HighRank +
                 saveSlotInfo.MasterRank +
-                saveSlotInfo.Investigations;
+                saveSlotInfo.Investigations +
+                saveSlotInfo.GuidingLands;
 
             All = new WeaponUsageViewModel(rootViewModel, ViewType.All, all);
         }
@@ -58,7 +61,9 @@ namespace MHWWeaponUsage.ViewModels
         {
             LowRank.Dispose();
             HighRank.Dispose();
+            MasterRank.Dispose();
             Investigations.Dispose();
+            GuidingLands.Dispose();
             All.Dispose();
         }
     }

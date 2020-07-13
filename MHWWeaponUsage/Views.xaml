@@ -103,6 +103,7 @@
                     <ContentControl Content="{Binding HighRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding MasterRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding Investigations, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
+                    <ContentControl Content="{Binding GuidingLands, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                 </Grid>
             </StackPanel>
         </Border>
@@ -169,6 +170,7 @@
                             <TextBlock Text="High rank"/>
                             <TextBlock Text="Master rank"/>
                             <TextBlock Text="Investigations"/>
+                            <TextBlock Text="Guiding Lands"/>
                         </ComboBox>
                         <Button Content="Mini mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}" Margin="6 2 2 2" Padding="4 0 4 0" ToolTip="Enter mini mode"/>
                         <Button Content="X" Command="{Binding CloseCommand, Mode=OneTime}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Mode=Self}}" Margin="6 2 2 2" ToolTip="Shutdown the application"/>
