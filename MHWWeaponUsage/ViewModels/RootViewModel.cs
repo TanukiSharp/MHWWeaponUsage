@@ -23,6 +23,7 @@ namespace MHWWeaponUsage.ViewModels
         All,
         LowRank,
         HighRank,
+        MasterRank,
         Investigations
     }
 

@@ -85,8 +85,12 @@
                         <Run Text="{Binding Name, Mode=OneTime}" Foreground="Blue"/>
                     </TextBlock>
                     <TextBlock Margin="1 1 8 1">
-                        <Run Text="Rank:"/>
-                        <Run Text="{Binding Rank, Mode=OneTime}" Foreground="Blue"/>
+                        <Run Text="HR:"/>
+                        <Run Text="{Binding HR, Mode=OneTime}" Foreground="Blue"/>
+                    </TextBlock>
+                    <TextBlock Margin="1 1 8 1">
+                        <Run Text="MR:"/>
+                        <Run Text="{Binding MR, Mode=OneTime}" Foreground="Blue"/>
                     </TextBlock>
                     <TextBlock Margin="1 1 8 1">
                         <Run Text="Playtime:"/>
@@ -97,6 +101,7 @@
                     <ContentControl Content="{Binding All, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding LowRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding HighRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
+                    <ContentControl Content="{Binding MasterRank, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                     <ContentControl Content="{Binding Investigations, Mode=OneTime}" ContentTemplate="{StaticResource WeaponUsageView}" Focusable="False"/>
                 </Grid>
             </StackPanel>
@@ -162,6 +167,7 @@
                             <TextBlock Text="All"/>
                             <TextBlock Text="Low rank"/>
                             <TextBlock Text="High rank"/>
+                            <TextBlock Text="Master rank"/>
                             <TextBlock Text="Investigations"/>
                         </ComboBox>
                         <Button Content="Mini mode" Command="{Binding MiniModeToggleCommand, Mode=OneTime}" Margin="6 2 2 2" Padding="4 0 4 0" ToolTip="Enter mini mode"/>

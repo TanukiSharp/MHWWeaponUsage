@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace MHWWeaponUsage.ViewModels
 
         private async Task LoadSaveDataAsync(CancellationToken cancellationToken)
         {
-            var ms = new MemoryStream();
+            MemoryStream ms;
             var crypto = new Crypto();
 
             using (Stream inputStream = File.OpenRead(saveDataFullFilename))
@@ -84,7 +85,7 @@ namespace MHWWeaponUsage.ViewModels
 
                 await crypto.DecryptAsync(buffer);
 
-                await ms.WriteAsync(buffer, 0, buffer.Length);
+                ms = new MemoryStream(buffer);
             }
 
             if (cancellationToken.IsCancellationRequested)

@@ -11,7 +11,8 @@ namespace MHWWeaponUsage.ViewModels
     {
         public int SlotNumber { get; }
         public string Name { get; }
-        public uint Rank { get; }
+        public uint HR { get; }
+        public uint MR { get; }
         public string Playtime { get; }
 
         private bool isVisible = true;
@@ -23,6 +24,7 @@ namespace MHWWeaponUsage.ViewModels
 
         public WeaponUsageViewModel LowRank { get; }
         public WeaponUsageViewModel HighRank { get; }
+        public WeaponUsageViewModel MasterRank { get; }
         public WeaponUsageViewModel Investigations { get; }
         public WeaponUsageViewModel All { get; }
 
@@ -34,14 +36,22 @@ namespace MHWWeaponUsage.ViewModels
 
             SlotNumber = saveSlotInfo.SlotNumber;
             Name = saveSlotInfo.Name;
-            Rank = saveSlotInfo.Rank;
+            HR = saveSlotInfo.HR;
+            MR = saveSlotInfo.MR;
             Playtime = MiscUtils.PlaytimeToGameString(saveSlotInfo.Playtime);
 
             LowRank = new WeaponUsageViewModel(rootViewModel, ViewType.LowRank, saveSlotInfo.LowRank);
             HighRank = new WeaponUsageViewModel(rootViewModel, ViewType.HighRank, saveSlotInfo.HighRank);
+            MasterRank = new WeaponUsageViewModel(rootViewModel, ViewType.MasterRank, saveSlotInfo.MasterRank);
             Investigations = new WeaponUsageViewModel(rootViewModel, ViewType.Investigations, saveSlotInfo.Investigations);
 
-            All = new WeaponUsageViewModel(rootViewModel, ViewType.All, saveSlotInfo.LowRank + saveSlotInfo.HighRank + saveSlotInfo.Investigations);
+            WeaponUsage all =
+                saveSlotInfo.LowRank +
+                saveSlotInfo.HighRank +
+                saveSlotInfo.MasterRank +
+                saveSlotInfo.Investigations;
+
+            All = new WeaponUsageViewModel(rootViewModel, ViewType.All, all);
         }
 
         public void Dispose()

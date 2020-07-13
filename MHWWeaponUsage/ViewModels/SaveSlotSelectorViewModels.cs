@@ -20,7 +20,8 @@ namespace MHWWeaponUsage.ViewModels
 
         public int SlotNumber { get; }
         public string Name { get; }
-        public uint Rank { get; }
+        public uint HR { get; }
+        public uint MR { get; }
         public string Playtime { get; }
         public uint Zeni { get; }
 
@@ -38,7 +39,8 @@ namespace MHWWeaponUsage.ViewModels
 
             SlotNumber = saveDataInfo.SlotNumber;
             Name = saveDataInfo.Name;
-            Rank = saveDataInfo.Rank;
+            HR = saveDataInfo.HR;
+            MR = saveDataInfo.MR;
             Playtime = MiscUtils.PlaytimeToGameString(saveDataInfo.Playtime);
             Zeni = saveDataInfo.Zeni;
 
