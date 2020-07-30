@@ -2,12 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:MHWWeaponUsage"
                     xmlns:vm="clr-namespace:MHWWeaponUsage.ViewModels"
-                    xmlns:cvt="clr-namespace:MHWWeaponUsage.ValueConverters">
+                    xmlns:cvt="clr-namespace:MHWWeaponUsage.ValueConverters"
+                    xmlns:bhv="clr-namespace:MHWWeaponUsage.Behaviors">
 
     <cvt:RatioToBrushValueConverter x:Key="RatioToBrushValueConverter"/>
     <cvt:WeaponEnumToImageSourceValueConverter x:Key="WeaponEnumToImageSourceValueConverter"/>
 
-    <DataTemplate x:Key="WeaponUsageValueMiniView">
+    <DataTemplate x:Key="WeaponUsageValueMiniView" DataType="vm:WeaponUsageValueViewModel">
         <Grid>
             <Rectangle Fill="{Binding Ratio, Mode=OneTime, Converter={StaticResource RatioToBrushValueConverter}}"/>
             <Rectangle Fill="#D0FFFFFF"/>
@@ -18,7 +19,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="WeaponUsageValueView">
+    <DataTemplate x:Key="WeaponUsageValueView" DataType="vm:WeaponUsageValueViewModel">
         <Grid VerticalAlignment="Stretch" Margin="4 0 4 0" Focusable="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -35,8 +36,14 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="WeaponUsageMiniView">
-        <ItemsControl x:Name="root" ItemsSource="{Binding Values}" ItemTemplate="{StaticResource WeaponUsageValueMiniView}" Focusable="False">
+    <DataTemplate x:Key="WeaponUsageMiniView" DataType="vm:WeaponUsageViewModel">
+        <ItemsControl x:Name="root" ItemsSource="{Binding Values}" ItemTemplate="{StaticResource WeaponUsageValueMiniView}" bhv:MouseWheelToZoomFactorBehavior.IsAttached="True" ToolTipService.ShowDuration="99999" Focusable="False">
+            <ToolTipService.ToolTip>
+                <TextBlock Text="{Binding ZoomFactor, Mode=OneWay, StringFormat=Zoom: {0}}"/>
+            </ToolTipService.ToolTip>
+            <ItemsControl.LayoutTransform>
+                <ScaleTransform ScaleX="{Binding ZoomFactor, Mode=OneWay}" ScaleY="{Binding ZoomFactor, Mode=OneWay}"/>
+            </ItemsControl.LayoutTransform>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="14" Focusable="False"/>
@@ -50,7 +57,7 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <DataTemplate x:Key="WeaponUsageView">
+    <DataTemplate x:Key="WeaponUsageView" DataType="vm:WeaponUsageViewModel">
         <ItemsControl x:Name="root" ItemsSource="{Binding Values}" ItemTemplate="{StaticResource WeaponUsageValueView}" Focusable="False">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

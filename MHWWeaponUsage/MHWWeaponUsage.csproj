@@ -69,6 +69,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AnonymousCommand.cs" />
+    <Compile Include="Behaviors\MouseWheelToZoomFactorBehavior.cs" />
     <Compile Include="ColorUtils.cs" />
     <Compile Include="SaveSlotSelectorWindow.xaml.cs">
       <DependentUpon>SaveSlotSelectorWindow.xaml</DependentUpon>

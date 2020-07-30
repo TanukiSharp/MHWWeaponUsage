@@ -45,7 +45,12 @@ namespace MHWWeaponUsage.ViewModels
         }
     }
 
-    public sealed class WeaponUsageViewModel : ViewModelBase, IDisposable
+    public interface IZoomFactorController
+    {
+        double ZoomFactor { get; set; }
+    }
+
+    public sealed class WeaponUsageViewModel : ViewModelBase, IDisposable, IZoomFactorController
     {
         private bool isVisible;
         public bool IsVisible
@@ -59,6 +64,13 @@ namespace MHWWeaponUsage.ViewModels
         {
             get { return values; }
             private set { SetValue(ref values, value); }
+        }
+
+        private double zoomFactor = 1.0;
+        public double ZoomFactor
+        {
+            get { return zoomFactor; }
+            set { SetValue(ref zoomFactor, value); }
         }
 
         private readonly RootViewModel rootViewModel;
