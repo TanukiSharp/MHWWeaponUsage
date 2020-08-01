@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MHWSaveUtils;
+using MHWWeaponUsage.ScalableVectorGraphics;
 
 namespace MHWWeaponUsage.ViewModels
 {
@@ -66,11 +67,22 @@ namespace MHWWeaponUsage.ViewModels
             private set { SetValue(ref values, value); }
         }
 
-        private double zoomFactor = 1.0;
+        private readonly Throttler refreshRendersThrottler;
+
+        public static double PersistedZoomFactor { get; private set; } = 1.0;
+
+        private double zoomFactor = PersistedZoomFactor;
         public double ZoomFactor
         {
             get { return zoomFactor; }
-            set { SetValue(ref zoomFactor, value); }
+            set
+            {
+                if (SetValue(ref zoomFactor, value))
+                {
+                    PersistedZoomFactor = zoomFactor;
+                    refreshRendersThrottler.Reset();
+                }
+            }
         }
 
         private readonly RootViewModel rootViewModel;
@@ -79,6 +91,11 @@ namespace MHWWeaponUsage.ViewModels
 
         private static readonly WeaponType[] weaponTypes = (WeaponType[])Enum.GetValues(typeof(WeaponType));
 
+        static WeaponUsageViewModel()
+        {
+            RasterizedImageContainer.Initialize(() => PersistedZoomFactor);
+        }
+
         public WeaponUsageViewModel(RootViewModel rootViewModel, ViewType viewType, WeaponUsage weaponUsage)
         {
             if (rootViewModel == null)
@@ -86,6 +103,10 @@ namespace MHWWeaponUsage.ViewModels
 
             this.rootViewModel = rootViewModel;
             this.viewType = viewType;
+
+            zoomFactor = PersistedZoomFactor;
+
+            refreshRendersThrottler = new Throttler(ForceRender, 500);
 
             ushort[] arrayValues = new ushort[]
             {
@@ -141,6 +162,16 @@ namespace MHWWeaponUsage.ViewModels
             }
 
             throw new InvalidOperationException($"Unknown sorting type '{rootViewModel.Sorting}'");
+        }
+
+        public void ForceRender()
+        {
+            RasterizedImageContainer.ClearCache();
+
+            // Classic MVVM hack to force re-render of the view from view model.
+            IList<WeaponUsageValueViewModel> originalValues = Values;
+            Values = null;
+            Values = originalValues;
         }
 
         public void Dispose()

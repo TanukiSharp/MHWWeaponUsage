@@ -78,6 +78,7 @@
     <Compile Include="ScalableVectorGraphics\RasterizedImageContainer.cs" />
     <Compile Include="ScalableVectorGraphics\Rasterizer.cs" />
     <Compile Include="TaskExtensions.cs" />
+    <Compile Include="Throttler.cs" />
     <Compile Include="ValueConverters\EnumToImageSourceValueConverter.cs" />
     <Compile Include="ValueConverters\RatioToBrushValueConverter.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />

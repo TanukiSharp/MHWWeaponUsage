@@ -59,8 +59,6 @@ namespace MHWWeaponUsage.Behaviors
                 double newZoomFactor = Math.Round(zoomFactorController.ZoomFactor + 0.1 * Math.Sign(e.Delta), 1);
 
                 zoomFactorController.ZoomFactor = Math.Max(0.5, Math.Min(newZoomFactor, 5.0));
-
-                RasterizedImageContainer.ClearCache();
             }
         }
     }

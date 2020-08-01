@@ -12,9 +12,16 @@ namespace MHWWeaponUsage.ScalableVectorGraphics
     {
         private static readonly Dictionary<string, ImageSource> renders = new Dictionary<string, ImageSource>();
 
+        private static Func<double> zoomFactor;
+
+        public static void Initialize(Func<double> zoomFactor)
+        {
+            RasterizedImageContainer.zoomFactor = zoomFactor;
+        }
+
         public static ImageSource GetRasterizedImage(int size, string imageResourceLocation)
         {
-            size *= 2;
+            size = (int)(size * 2.0 * zoomFactor());
 
             string key = $"{size}|{imageResourceLocation}";
 
@@ -43,6 +50,11 @@ namespace MHWWeaponUsage.ScalableVectorGraphics
             }
 
             return result;
+        }
+
+        public static void ClearCache()
+        {
+            renders.Clear();
         }
     }
 }
