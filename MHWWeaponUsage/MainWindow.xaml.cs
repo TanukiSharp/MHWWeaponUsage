@@ -30,6 +30,15 @@ namespace MHWWeaponUsage
             DataContext = rootViewModel;
 
             rootViewModel.Reload().Forget();
+
+            this.Loaded += MainWindow_Loaded;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var source = PresentationSource.FromVisual(this);
+            monitorScaleX = source.CompositionTarget.TransformToDevice.M11;
+            monitorScaleY = source.CompositionTarget.TransformToDevice.M22;
         }
 
         private void RootViewModel_MiniModeChanged(object sender, EventArgs e)
@@ -70,6 +79,9 @@ namespace MHWWeaponUsage
         }
 
         #region Moving window
+
+        private double monitorScaleX;
+        private double monitorScaleY;
 
         private Point originMousePosition;
         private Point originWindowPosition;
@@ -113,8 +125,8 @@ namespace MHWWeaponUsage
             {
                 Point currentPosition = PointToScreen(e.GetPosition(this));
 
-                Left = originWindowPosition.X + (currentPosition.X - originMousePosition.X);
-                Top = originWindowPosition.Y + (currentPosition.Y - originMousePosition.Y);
+                Left = originWindowPosition.X + (currentPosition.X - originMousePosition.X) / monitorScaleX;
+                Top = originWindowPosition.Y + (currentPosition.Y - originMousePosition.Y) / monitorScaleY;
             }
         }
 
