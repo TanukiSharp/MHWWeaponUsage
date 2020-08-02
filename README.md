@@ -4,7 +4,7 @@ DO NOT use this code, in part or in totality, to cheat, or produce code that wou
 
 # Download
 
-Current version: <b><a href="https://tanukisharp.github.io/MHWWeaponUsage/download.html">0.1.1.0</a></b><br/>
+Current version: <b><a href="https://tanukisharp.github.io/MHWWeaponUsage/download.html">0.1.3.0</a></b><br/>
 Last modification: 2020/07/13
 
 # Overview
@@ -36,6 +36,8 @@ To enter mini-mode, simply click the `Mini mode` button. To exit mini mode, righ
 When switching to mini-mode, the application prompts you for the save data slot to display. If you have only one, there is no prompt.
 
 Also, in this mode, the application remain always on top of other windows, so you can have it as overlay within the game. Note that this works only with the game in windowed mode (probably), never tested in full-screen mode.
+
+Additionally, in mini mode, you can use mouse wheel to zoom the window in and out.
 
 # Other features
 
